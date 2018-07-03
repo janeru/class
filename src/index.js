@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 // import './index.css';
-import AppRouter from '../src/react-router/router'
+// import AppRouter from '../src/react-router/router'
 import registerServiceWorker from '../src/registerServiceWorker';
 import { Provider } from "react-redux";
 import { store } from "./store/configureStore";
 import { render } from "react-dom";
-// import App from "./components/App";
+import App from "./components/App";
 
 
 // render(
@@ -17,7 +17,7 @@ import { render } from "react-dom";
 // );
 const jsx = (
     <Provider store={store}>
-        <AppRouter />
+        <App />
     </Provider>
 )
 
