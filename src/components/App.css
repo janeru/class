@@ -1,38 +1,81 @@
-.App {
+/* 班級列表的css */
+.justify-content-between{
+  margin:20px;
+  padding:50px
+  
+}
+.content{
+  
+  width: 100%;
+  margin:10px;
+}
+.buttonClass{
+  
+  height:5vh;
+  margin:30px;
+  float: center;
+  background-color:pink;
+  color:rgb(59, 51, 48);
+  border-radius:1.5rem;
+  
+}
+
+/* 班級頁面的css */
+.buttonStudent{
+  float: right;
+  margin:20px;
+  border-radius:1.5rem;
+}
+
+/* dropdownMenu */
+.dropdownMenu{
+  float:center;
+  margin:50px;
+  background-color:pink;
+  color:rgb(59, 51, 48);
+  width:10vw;
+}
+.dropdownCol{
+  background-color: #f0f8ff
+}
+.buttonGroup{
+  margin: 50px;
+  float:left;
+  background-color:pink;
+  color:rgb(59, 51, 48);
+  height:5vh;
+  border-radius:1.5rem;
+}
+
+.chooseClassName{
+  margin:30px;
+  line-height: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
   text-align: center;
+  /* float: right; */
 }
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.classBox{
+ 
+  justify-content: center;
+  /* text-align:center; */
+  margin:30px;
+  padding:10px;
+  /* float:right; */
+  
 }
-
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.card-body{
+  background-color: #ffc0cb59
 }
-
-.App-title {
-  font-size: 1.5em;
+.classBox2{
+  margin:50px;
+  text-align: center;
+  justify-content: center;
 }
-
-.App-intro {
-  font-size: large;
+.dropDownColor{
+  background-color: #5eccf826;
+  padding:20px;
 }
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.photo{
-  display: flex;
-  text-align:center;
-  margin:10px;
-}
-.mb-3,.col-sm-6,
-.col-md-4{
-  margin:10px;
+.deleteGroup{
+  border-radius:1.5rem;
 }
