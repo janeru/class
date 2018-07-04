@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Appcss from './App.css'
 import ClassAdmin from './ClassAdmin';
 import Class from '../actions/Class'
 // import { Link } from 'react-router-dom';
@@ -34,14 +35,10 @@ class ClassPage extends Component {
 
   //控制班級頁面是否出現，哪個班級的資料跟index也傳進來
   classAdminFunc = (data, index) => () => {
-    // console.log(data)
-    // console.log(index)
     this.setState(({ classAdminPage, classId }) => ({
       classAdminPage: !classAdminPage,
       classId: data.id
     }))
-    // console.log(this.state.classAdminPage)
-    // console.log(this.state.classId)
   }
 
   handleChange = (event) => {
@@ -60,37 +57,37 @@ class ClassPage extends Component {
     const { modal, classAdminPage, classId } = this.state
     return (
       <div>
+
         {classAdminPage === true ? (<ClassAdmin class_Id={classId} classAdmin_Page={classAdminPage} />) :
           (
             <div>
-              <Button color="secondary" onClick={this.toggle}>新增班級</Button>
-
-              <div>
+              <Row style={{ backgroundColor: '#2196f329', height: '13vh' }}>
+                <Button color="secondary" className="buttonClass" onClick={this.toggle}>新增班級</Button>
+              </Row>
+              <Row className="justify-content-between" >
                 {this.props.data.map((data, index) => (
 
-                  <Row className="photo">
-                    <Col sm={6} md={4} className="mb-3">
-                      <Card className="content" >
-                        <CardImg width="100%" src="https://picsum.photos/800/900?image=1067" alt="Card image cap"
-                          onClick={this.classAdminFunc(data, index)}
-                        />
-                        <i class="fas fa-trash" onClick={() => this.props.dispatch(deleteClass({ id: data.id }))} />
-                        <CardBlock>
-                          <CardTitle>
-                            {data.name}
-                            {/* {data.id} */}
-                          </CardTitle>
-                          <CardText>
-                            {data.studentsNum !== undefined ? data.studentsNum + "/" + data.studentMaxNum : 0 + "/" + data.studentMaxNum}
-                          </CardText>
-                        </CardBlock>
-                      </Card>
-                    </Col>
-                  </Row>
-
+                  //  <Col xs="4"> => 12/4=3 就是每排可以放3張照片，每3張放在一欄就換一行
+                  <Col xs="4">
+                    <Card className="content" >
+                      <CardImg width="100%" height="250vh" src="https://picsum.photos/800/900?image=1067" alt="Card image cap"
+                        onClick={this.classAdminFunc(data, index)}
+                      />
+                      <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }} onClick={() => this.props.dispatch(deleteClass({ id: data.id }))} />
+                      <CardBlock>
+                        <CardTitle>
+                          {data.name}
+                        </CardTitle>
+                        <CardText>
+                          {data.studentsNum !== undefined ? data.studentsNum + "/" + data.studentMaxNum : 0 + "/" + data.studentMaxNum}
+                        </CardText>
+                      </CardBlock>
+                    </Card>
+                  </Col>
                 ))
                 }
-              </div>
+              </Row>
+
 
               {/* 新增後所彈跳出來的Modal */}
               <Modal isOpen={modal} toggle={this.toggle}>
