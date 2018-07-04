@@ -30,10 +30,10 @@
 /* dropdownMenu */
 .dropdownMenu{
   float:center;
-  margin:50px;
+  margin:40px;
   background-color:pink;
   color:rgb(59, 51, 48);
-  width:10vw;
+  width:100px;
 }
 .dropdownCol{
   background-color: #f0f8ff
@@ -79,3 +79,4 @@
 .deleteGroup{
   border-radius:1.5rem;
 }
+

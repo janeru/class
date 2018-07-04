@@ -68,7 +68,8 @@ class ClassPage extends Component {
                 {this.props.data.map((data, index) => (
 
                   //  <Col xs="4"> => 12/4=3 就是每排可以放3張照片，每3張放在一欄就換一行
-                  <Col xs="4">
+                  //  xs 用在1000以下的小螢幕
+                  <Col xs="9" sm="4">
                     <Card className="content" >
                       <CardImg width="100%" height="250vh" src="https://picsum.photos/800/900?image=1067" alt="Card image cap"
                         onClick={this.classAdminFunc(data, index)}
