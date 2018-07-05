@@ -153,7 +153,7 @@ const classReducer = (state = initialState, action) => {
                     } else return data
                 })
             }
-        // data -> 資料 -> studentsInfo -> 某資料的 -> nickname
+
 
         case "EDIT_STUDENT":
             return {
@@ -185,7 +185,20 @@ const classReducer = (state = initialState, action) => {
                                 ...data, studentsInfo: data.studentsInfo.filter(({ id }) => {
                                     return (id !== action.payload.studentUpdateInfoId)
                                 }
-                                )
+                                ), groups: data.groups.map((group) => {
+                                    if (group.id === action.payload.deleteStudentGroupId) {
+                                        return {
+                                            ...group,
+                                            students: group.students.filter(({ id }) => {
+
+                                                return id !== action.payload.studentUpdateInfoId
+                                            })
+                                        }
+
+                                    } return group
+                                }), students: data.students.filter(({ id }) => {
+                                    return id !== action.payload.studentUpdateInfoId
+                                })
 
 
                             }
@@ -218,10 +231,7 @@ const classReducer = (state = initialState, action) => {
                                 ...data, groups: data.groups.filter(({ id }) => {
                                     return (id !== action.payload.id)
                                 }
-
-                                )
-
-
+                                ), students: [...data.students, ...action.payload.groupStudents]
                             }
                         } else return data
                     })
@@ -233,7 +243,6 @@ const classReducer = (state = initialState, action) => {
             return {
                 ...state, data:
                     state.data.map(data => {
-                        console.log(action.payload.classId)
                         if (data.id === action.payload.classId) {
 
                             return {
@@ -265,9 +274,7 @@ const classReducer = (state = initialState, action) => {
                                     if (group.id === action.payload.groupId) {
                                         return {
                                             ...group, students: group.students.filter(({ id }) => {
-                                                console.log(id)
-                                                console.log(action.payload.id)
-                                                // console.log(id !== action.payload.id)
+
                                                 return id !== action.payload.id
                                             }
                                             )

@@ -46,7 +46,9 @@ class ClassStudents extends Component {
             //新增的group的名字
             groupName: '',
             //是否返回班級列表
-            backToClassList: false
+            backToClassList: false,
+            //要刪除學生的小組id
+            deleteStudentGroupId: NaN,
 
 
 
@@ -91,8 +93,8 @@ class ClassStudents extends Component {
         this.setState(({ modal2 }) => ({ modal2: !modal2 }))
     }
 
-    //更新要編輯的學生的id,名字,暱稱,帳戶
-    renewStudent = (data, studentId, name) => () => {
+    //更新要編輯的學生的id,名字,暱稱,帳戶以及位在哪一個組別的id
+    renewStudent = (data, studentId, name, deleteGroupId) => () => {
         data.studentsInfo.map(info => {
             // 如果id相符的話，就更新匿名跟帳號
             if (info.id === studentId) {
@@ -101,13 +103,14 @@ class ClassStudents extends Component {
                 //更新匿名
                 const nickName = info.nickname
                 this.setState(({ modal2, studentUpdateInfoId, studentUpdateInfoName,
-                    studentUpdateInfoNickname, studentUpdateInfoAccount }) => ({
+                    studentUpdateInfoNickname, studentUpdateInfoAccount, deleteStudentGroupId }) => ({
 
                         studentUpdateInfoId: studentId,
                         studentUpdateInfoName: name,
                         studentUpdateInfoNickname: nickName,
                         studentUpdateInfoAccount: account,
-                        modal2: !modal2
+                        modal2: !modal2,
+                        deleteStudentGroupId: deleteGroupId
 
 
                     }));
@@ -159,18 +162,18 @@ class ClassStudents extends Component {
     // 刪除學生
     handleSubmitDeleteStudent = (event) => {
         event.preventDefault();
-        const { studentUpdateInfoId } = this.state
+        const { studentUpdateInfoId, deleteStudentGroupId } = this.state
         const nowStudentClass_ID = this.props.class_Id
-        this.props.dispatch(deleteStudents({ nowStudentClass_ID, studentUpdateInfoId }))
+        this.props.dispatch(deleteStudents({ nowStudentClass_ID, studentUpdateInfoId, deleteStudentGroupId }))
         this.setState(({ modal2 }) => ({ modal2: !modal2 }))
 
     }
 
-    //傳入要刪除組別的班級classId以及組別的id
-    handleSubmitDeleteGroup = (id) => () => {
+    //傳入要刪除組別的班級classId以及組別的id 也要傳入要移出去的組別的學生id及姓名
+    handleSubmitDeleteGroup = (groupStudents, id) => () => {
         const { class_Id } = this.props
         const classId = class_Id
-        this.props.dispatch(deleteGroups({ classId, id }))
+        this.props.dispatch(deleteGroups({ groupStudents, classId, id }))
     }
     // 處理尚未分組要顯示的座位
 
@@ -275,7 +278,7 @@ class ClassStudents extends Component {
                                                                                 <div>
                                                                                     <div style={{ color: '#795548', fontWeight: 'bold', fontSize: '1.2rem' }}>{group.name}</div>
                                                                                     <div>
-                                                                                        <Button color="secondary" onClick={this.handleSubmitDeleteGroup(group.id)} className="deleteGroup">刪除小組</Button>
+                                                                                        <Button color="secondary" onClick={this.handleSubmitDeleteGroup(group.students, group.id)} className="deleteGroup">刪除小組</Button>
                                                                                         <Row className="justify-content-between">
                                                                                             {
 
@@ -284,7 +287,7 @@ class ClassStudents extends Component {
                                                                                                     return (
                                                                                                         <div className="groupStudent">
                                                                                                             <i class="fas fa-child" style={{ color: '#4caf50ad' }} onClick={this.moveStudentAwayGroup(data.id, group.id, student.id, student.name)}></i>
-                                                                                                            <div key={student.id} onClick={this.renewStudent(data, student.id, student.name)}>
+                                                                                                            <div key={student.id} onClick={this.renewStudent(data, student.id, student.name, group.id)}>
 
                                                                                                                 {student.name}
                                                                                                             </div>
@@ -321,10 +324,16 @@ class ClassStudents extends Component {
                                                         {
 
                                                             data.students.map((student) => {
-                                                                return <div key={student.id} style={{ margin: '10px' }}>
-                                                                    <i class="fas fa-bookmark" style={{ color: '#795548e3' }} onClick={this.addStudentsGroup(student.id, student.name)}></i>
-                                                                    {student.name}
-                                                                </div>
+                                                                return (
+                                                                    <div className="noGroupStudent">
+                                                                        <i class="fas fa-bookmark" style={{ color: '#795548e3' }} onClick={this.addStudentsGroup(student.id, student.name)}></i>
+                                                                        <div key={student.id} style={{ margin: '10px' }} onClick={this.renewStudent(data, student.id, student.name, )}>
+
+                                                                            {student.name}
+                                                                        </div>
+
+                                                                    </div>
+                                                                )
 
                                                             })
                                                         }

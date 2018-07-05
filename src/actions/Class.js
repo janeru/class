@@ -44,13 +44,14 @@ export const editStudents = ({ nowStudentClass_ID, studentUpdateInfoId, updateNi
         }
     }
     )
-// 刪除學生
-export const deleteStudents = ({ nowStudentClass_ID, studentUpdateInfoId } = {}) =>
+// 刪除學生暱稱
+export const deleteStudents = ({ nowStudentClass_ID, studentUpdateInfoId, deleteStudentGroupId } = {}) =>
     ({
         type: "DELETE_STUDENT",
         payload: {
             nowStudentClass_ID,
             studentUpdateInfoId,
+            deleteStudentGroupId
         }
     }
     )
@@ -68,13 +69,15 @@ export const addGroups = ({ groupName, classid, total = 0, students = [] } = {})
         }
     }
     )
-// 刪除小組 (需要比對要刪除的班級id及班級內要刪除的小組的id)
-export const deleteGroups = ({ classId, id } = {}) =>
+// 刪除小組 (需要比對要刪除的班級id及班級內要刪除的小組的id，以及要將留在小組的學生們的id及name移出去)
+export const deleteGroups = ({ classId, id, groupStudents } = {}) =>
     ({
         type: "DELETE_GROUP",
         payload: {
             classId,
-            id
+            id,
+            groupStudents
+
         }
     }
     )

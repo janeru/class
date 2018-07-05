@@ -86,10 +86,8 @@
 
 }
 
-.groupStudent{
+.noGroupStudent,.groupStudent{
+  margin:10px;
   display: flex;
 }
 
-.backToClassList{
- 
-}
