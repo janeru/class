@@ -25,12 +25,18 @@ class ClassPage extends Component {
       name: '',
       studentMaxNum: 0,
       classAdminPage: false,
-      classId: NaN
+      classId: NaN,
+      //是否要刪除班級的modal
+      modalDeleteClass: false
     };
   }
-  //控制modal的彈跳
+  //控制新增班級的modal的彈跳
   toggle = () => {
     this.setState(({ modal }) => ({ modal: !modal }));
+  }
+  //控制刪除班級的modal的彈跳
+  toggleDeleteClass = () => {
+    this.setState(({ modalDeleteClass }) => ({ modalDeleteClass: !modalDeleteClass }));
   }
 
   //控制班級頁面是否出現，哪個班級的資料跟index也傳進來
@@ -51,10 +57,16 @@ class ClassPage extends Component {
     this.props.dispatch(addClass({ name, studentMaxNum }))
     this.setState(({ name, studentMaxNum, modal }) => ({ name: "", studentMaxNum: 0, modal: !modal }))
   }
+  //確認是否刪除班級
+  handleDeleteClass = (data) => () => {
+
+    this.props.dispatch(deleteClass({ id: data.id }))
+    this.setState(({ modalDeleteClass }) => ({ modalDeleteClass: !modalDeleteClass }))
+  }
 
 
   render() {
-    const { modal, classAdminPage, classId } = this.state
+    const { modal, classAdminPage, classId, modalDeleteClass } = this.state
     return (
       <div>
 
@@ -74,7 +86,8 @@ class ClassPage extends Component {
                       <CardImg width="100%" height="250vh" src="https://picsum.photos/800/900?image=1067" alt="Card image cap"
                         onClick={this.classAdminFunc(data, index)}
                       />
-                      <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }} onClick={() => this.props.dispatch(deleteClass({ id: data.id }))} />
+                      <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }}
+                        onClick={this.toggleDeleteClass} />
                       <CardBlock>
                         <CardTitle>
                           {data.name}
@@ -83,41 +96,56 @@ class ClassPage extends Component {
                           {data.studentsNum !== undefined ? data.studentsNum + "/" + data.studentMaxNum : 0 + "/" + data.studentMaxNum}
                         </CardText>
                       </CardBlock>
+                      {/* 新增後所彈跳出來的Modal */}
+                      <Modal isOpen={modal} toggle={this.toggle}>
+                        <ModalHeader toggle={this.toggle}>新增班級</ModalHeader>
+                        <ModalBody>
+                          <Form>
+                            <FormGroup>
+                              <Label for="name">班級名稱</Label>
+                              <Input type="text" name="classname" id="name" placeholder=""
+
+                                onChange={
+                                  (input) => this.handleChange(input)
+                                }
+                              />
+                              <Label for="studentMaxNum">人數</Label>
+                              <Input type="number" name="classpeoplenum" id="studentMaxNum" placeholder=""
+                                onChange={
+                                  (input) => this.handleChange(input)
+                                }
+                              />
+                            </FormGroup>
+                          </Form>
+                        </ModalBody>
+                        <ModalFooter>
+                          <Button onClick={this.handleSubmit}>
+                            儲存
+                </Button>
+                        </ModalFooter>
+                      </Modal>
+                      {/* 刪除班級所詢問的modal */}
+                      <Modal isOpen={modalDeleteClass} toggle={this.toggleDeleteClass}>
+                        <ModalHeader toggle={this.toggleDeleteClass}>刪除班級</ModalHeader>
+                        <ModalBody>
+                          您確定要刪除班級嗎？這將會遺失所有學生資料。
+                </ModalBody>
+                        <ModalFooter>
+                          <Button onClick={this.handleDeleteClass(data)}>
+                            儲存
+                </Button>
+                        </ModalFooter>
+                      </Modal>
                     </Card>
+
                   </Col>
                 ))
                 }
+
+
               </Row>
 
 
-              {/* 新增後所彈跳出來的Modal */}
-              <Modal isOpen={modal} toggle={this.toggle}>
-                <ModalHeader toggle={this.toggle}>新增班級</ModalHeader>
-                <ModalBody>
-                  <Form>
-                    <FormGroup>
-                      <Label for="name">班級名稱</Label>
-                      <Input type="text" name="classname" id="name" placeholder=""
-
-                        onChange={
-                          (input) => this.handleChange(input)
-                        }
-                      />
-                      <Label for="studentMaxNum">人數</Label>
-                      <Input type="number" name="classpeoplenum" id="studentMaxNum" placeholder=""
-                        onChange={
-                          (input) => this.handleChange(input)
-                        }
-                      />
-                    </FormGroup>
-                  </Form>
-                </ModalBody>
-                <ModalFooter>
-                  <Button onClick={this.handleSubmit}>
-                    儲存
-                </Button>
-                </ModalFooter>
-              </Modal>
 
             </div>
           )
