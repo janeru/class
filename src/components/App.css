@@ -80,3 +80,9 @@
   border-radius:1.5rem;
 }
 
+/* 避免重疊 */
+#Item {
+  top: 100px !important; 
+
+}
+
