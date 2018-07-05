@@ -39,9 +39,7 @@ class GroupSheet extends Component {
     changeValue = (name, id, number) => () => {
         this.setState(({ dropDownValue, buttonToChoose, nowClickGroupId }) => ({ dropDownValue: name, nowClickGroupId: id, buttonToChoose: number }))
     }
-    // whichGroup = (clickGroupId) => () => {
-    //     this.setState(({ nowClickGroupId }) => ({ nowClickGroupId: clickGroupId }))
-    // }
+
 
     render() {
         const { nowClass } = this.props
@@ -99,7 +97,7 @@ class GroupSheet extends Component {
                                         <div>
                                             {nowClass.students.map((student) => {
                                                 if (student.name !== '尚未加入') {
-                                                    console.log(student.name)
+
                                                     return <DropdownItem disabled>{student.name}</DropdownItem>
                                                 }
                                             })}
@@ -140,10 +138,10 @@ class GroupSheet extends Component {
 
                                 <DropdownMenu id="Item">
                                     <div >
-                                        {console.log(nowClass.groups.length)}
+
                                         {nowClass.students.map((student) => {
                                             if (student.name !== '尚未加入') {
-                                                console.log(student.name)
+
                                                 return <DropdownItem disabled>{student.name}</DropdownItem>
                                             }
                                         })}

@@ -15,8 +15,9 @@ const mapStateToProps = (state) => {
     data: state.datas.data,
   }
 
-
 }
+
+
 
 class ClassPage extends Component {
   constructor(props) {
@@ -55,13 +56,13 @@ class ClassPage extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const { name, studentMaxNum } = this.state;
-    this.props.dispatch(addClass({ name, studentMaxNum }))
+    this.props.addClass({ name, studentMaxNum })
     this.setState(({ name, studentMaxNum, modal }) => ({ name: "", studentMaxNum: 0, modal: !modal }))
   }
   //確認是否刪除班級
   handleDeleteClass = (data) => () => {
 
-    this.props.dispatch(deleteClass({ id: data.id }))
+    this.props.deleteClass({ id: data.id })
     this.setState(({ modalDeleteClass }) => ({ modalDeleteClass: !modalDeleteClass }))
   }
 
@@ -157,5 +158,10 @@ class ClassPage extends Component {
   }
 
 }
-const App = connect(mapStateToProps)(ClassPage);
+
+const mapDispatchToProps = {
+  addClass,
+  deleteClass,
+}
+const App = connect(mapStateToProps, mapDispatchToProps)(ClassPage);
 export default App;

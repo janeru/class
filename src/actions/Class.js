@@ -1,8 +1,10 @@
 // 新增班級列表
 import uuid from 'uuid';
 
-export const addClass = ({ id, name = '', studentMaxNum = 0, studentsNum = 0,
-    studentsInfo = [], groups = [], students = [] } = {}) =>
+export const addClass = ({
+    id, name = '', studentMaxNum = 0, studentsNum = 0,
+    studentsInfo = [], groups = [], students = [], count = 0
+} = {}) =>
     ({
         type: "ADD_CLASS",
         payload: {
@@ -11,7 +13,9 @@ export const addClass = ({ id, name = '', studentMaxNum = 0, studentsNum = 0,
             studentMaxNum,
             studentsInfo,
             groups,
-            students
+            students,
+            studentsNum,
+            count
         }
     });
 

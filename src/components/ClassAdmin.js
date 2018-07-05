@@ -85,7 +85,7 @@ class ClassStudents extends Component {
         }
         // 加總人數
         const studentMaxNumber = Number(studentSeatNum) + Number(data.studentMaxNum)
-        this.props.dispatch(addStudents({ nowClass_ID, studentMaxNumber, addStudentsArray }))
+        this.props.addStudents({ nowClass_ID, studentMaxNumber, addStudentsArray })
         this.setState(({ studentSeatNum, modal }) => ({ studentSeatNum: 0, modal: !modal }))
     }
     //控制是否點選學生的彈跳  
@@ -134,7 +134,7 @@ class ClassStudents extends Component {
 
         const { groupName } = this.state;
         const classid = data.id
-        this.props.dispatch(addGroups({ groupName, classid }))
+        this.props.addGroups({ groupName, classid })
         this.setState(({ dropdownOpen, modal4 }) => ({ dropdownOpen: !dropdownOpen, modal4: !modal4 }));
     }
     //當點選學生加入群組時的彈跳
@@ -155,7 +155,7 @@ class ClassStudents extends Component {
         const { studentUpdateInfoId, updateNickname } = this.state
         // 帶入選哪個班級的id
         const nowStudentClass_ID = this.props.class_Id
-        this.props.dispatch(editStudents({ nowStudentClass_ID, studentUpdateInfoId, updateNickname }))
+        this.props.editStudents({ nowStudentClass_ID, studentUpdateInfoId, updateNickname })
         this.setState(({ updateNickname, modal2 }) => ({ updateNickname: '', modal2: !modal2 }))
 
     }
@@ -164,7 +164,7 @@ class ClassStudents extends Component {
         event.preventDefault();
         const { studentUpdateInfoId, deleteStudentGroupId } = this.state
         const nowStudentClass_ID = this.props.class_Id
-        this.props.dispatch(deleteStudents({ nowStudentClass_ID, studentUpdateInfoId, deleteStudentGroupId }))
+        this.props.deleteStudents({ nowStudentClass_ID, studentUpdateInfoId, deleteStudentGroupId })
         this.setState(({ modal2 }) => ({ modal2: !modal2 }))
 
     }
@@ -173,7 +173,7 @@ class ClassStudents extends Component {
     handleSubmitDeleteGroup = (groupStudents, id) => () => {
         const { class_Id } = this.props
         const classId = class_Id
-        this.props.dispatch(deleteGroups({ groupStudents, classId, id }))
+        this.props.deleteGroups({ groupStudents, classId, id })
     }
     // 處理尚未分組要顯示的座位
 
@@ -194,7 +194,7 @@ class ClassStudents extends Component {
             if (this.props.data[i].id === this.props.class_Id) {
                 const data = this.props.data[i]
 
-                this.props.dispatch(studentsInfor({ studentsNew: this.seatArray(data), classId: this.props.class_Id }))
+                this.props.studentsInfor({ studentsNew: this.seatArray(data), classId: this.props.class_Id })
             }
         }
     }
@@ -219,13 +219,13 @@ class ClassStudents extends Component {
         const name = this.state.addStudentGroupName
         const addStudentToGroupInfo = { id, name }
         this.setState(({ modal3 }) => ({ modal3: !modal3 }))
-        this.props.dispatch(addStudentstoGroup({ classId, groupid, id, addStudentToGroupInfo }))
+        this.props.addStudentstoGroup({ classId, groupid, id, addStudentToGroupInfo })
     }
     // 處理將學生移開小組 (傳入要移除的組別的id以及要移除的學生的id,name)
     moveStudentAwayGroup = (classId, groupId, id, name) => () => {
         const moveStudentAwayGroupInfo = { id, name }
         console.log(moveStudentAwayGroupInfo)
-        this.props.dispatch(moveStudentsawayGroup({ classId, moveStudentAwayGroupInfo, groupId, id }))
+        this.props.moveStudentsawayGroup({ classId, moveStudentAwayGroupInfo, groupId, id })
 
     }
 
@@ -464,9 +464,24 @@ class ClassStudents extends Component {
         );
     }
 }
+const mapDispatchToProps = {
+    studentsInfor,
+    deleteStudents,
+    addStudents,
+    addGroups,
+    editStudents,
+    deleteGroups,
+    addStudentstoGroup,
+    moveStudentsawayGroup
 
 
-const ClassAdmin = connect(mapStateToProps)(ClassStudents);
+
+
+
+}
+
+
+const ClassAdmin = connect(mapStateToProps, mapDispatchToProps)(ClassStudents);
 export default ClassAdmin;
 
 
