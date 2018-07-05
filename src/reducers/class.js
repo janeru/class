@@ -45,7 +45,8 @@ const initialState = {
                     id: 3,
                     name: "Lucas"
                 },
-            ]
+            ],
+            count: 0
         },
         {
             id: 2,
@@ -73,7 +74,8 @@ const initialState = {
                     ]
                 }
             ],
-            students: []
+            students: [],
+            count: 0
         },
         {
             id: 3,
@@ -103,7 +105,8 @@ const initialState = {
                     id: 5,
                     name: "Neil"
                 }
-            ]
+            ],
+            count: 0
         }
     ]
 
@@ -120,10 +123,10 @@ const classReducer = (state = initialState, action) => {
                 ...state, data:
                     state.data.map(data => {
                         //先看看要加入哪個班級
-                        console.log(action.payload.studentsNew)
+
                         if (data.id === action.payload.classId) {
                             return {
-                                ...data, students: [...data.students, ...action.payload.studentsNew]
+                                ...data, count: data.count + 1, students: [...data.students, ...action.payload.studentsNew]
                             }
                         } else return data
                     })
@@ -139,8 +142,7 @@ const classReducer = (state = initialState, action) => {
             return {
                 // id是第幾筆資料的id
                 ...state, data: state.data.filter(({ id }) => {
-                    // console.log({ id })
-                    // console.log(id !== action.id)
+
 
                     return id !== action.id
                 })
@@ -164,8 +166,7 @@ const classReducer = (state = initialState, action) => {
 
                                 ...data, studentsInfo: data.studentsInfo.map((stu) => {
                                     if (stu.id === action.payload.studentUpdateInfoId) {
-                                        // console.log('stu', stu)
-                                        // console.log('action.payload.updateNickname', action.payload.updateNickname)
+
                                         return { ...stu, nickname: action.payload.updateNickname }
                                     } else return stu
                                 }
@@ -210,12 +211,9 @@ const classReducer = (state = initialState, action) => {
             return {
                 ...state, data:
                     state.data.map(data => {
-                        console.log(data)
-                        console.log(data.id)
-                        console.log(action.payload.classid)
+
                         if (data.id === action.payload.classid) {
-                            console.log(data.id)
-                            console.log(action.payload.classid)
+
                             return {
                                 ...data, groups: [...data.groups, action.payload]
                             }

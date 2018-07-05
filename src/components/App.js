@@ -15,6 +15,7 @@ const mapStateToProps = (state) => {
     data: state.datas.data,
   }
 
+
 }
 
 class ClassPage extends Component {
@@ -132,7 +133,7 @@ class ClassPage extends Component {
                 </ModalBody>
                         <ModalFooter>
                           <Button color="danger" onClick={this.handleDeleteClass(data)}>
-                          確認刪除
+                            確認刪除
                 </Button>
                         </ModalFooter>
                       </Modal>

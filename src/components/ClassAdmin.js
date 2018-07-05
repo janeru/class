@@ -50,12 +50,12 @@ class ClassStudents extends Component {
             //要刪除學生的小組id
             deleteStudentGroupId: NaN,
 
-
-
         };
 
         // console.log(this.props.class_Id)
     }
+
+
     //控制modal的彈跳
     toggle = () => {
         this.setState(({ modal }) => ({
@@ -180,31 +180,36 @@ class ClassStudents extends Component {
     seatArray = (data) => {
         const studentSeat = []
         for (let i = 0; i < (data.studentMaxNum - data.studentsNum); i++) {
-            console.log(i)
             studentSeat.push({ id: uuid(), name: '尚未加入' })
         }
-        return studentSeat
+        if (data.count === 0) {
+            return studentSeat
+        }
+        else return []
     }
 
-
     componentWillMount() {
+
         for (let i = 0; i < (this.props.data.length); i++) {
             if (this.props.data[i].id === this.props.class_Id) {
                 const data = this.props.data[i]
+
                 this.props.dispatch(studentsInfor({ studentsNew: this.seatArray(data), classId: this.props.class_Id }))
             }
         }
     }
 
+
     // 將這個班級的每個組別的id 弄成array
     groupInfoArray = (data) => {
         const groupIdArray = []
         data.groups.map((group) => {
-            console.log(group)
+
             groupIdArray.push({ id: group.id, name: group.name })
         })
         return groupIdArray
     }
+
 
 
     // 處理增加學生進入小組 (傳入要加入的空座位的組別的id以及要加入的學生的id,name)
