@@ -131,8 +131,8 @@ class ClassPage extends Component {
                           您確定要刪除班級嗎？這將會遺失所有學生資料。
                 </ModalBody>
                         <ModalFooter>
-                          <Button onClick={this.handleDeleteClass(data)}>
-                            儲存
+                          <Button color="danger" onClick={this.handleDeleteClass(data)}>
+                          確認刪除
                 </Button>
                         </ModalFooter>
                       </Modal>
