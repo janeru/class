@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Class from '../actions/Class'
-import { Link } from 'react-router-dom';
-import { deleteStudents } from '../actions/Class'
-import { editStudents } from '../actions/Class'
-import { addStudents } from '../actions/Class'
-import { deleteClass } from '../actions/Class'
-import { addClass } from '../actions/Class'
-import { Container, Row, Col, Jumbotron, Button, Card, CardImg, CardBlock, CardTitle, CardSubtitle, CardText, Badge, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Col, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 const mapStateToProps = (state) => {
-    // console.log(state)
     return {
         data: state.datas.data,
     }
@@ -43,7 +35,7 @@ class GroupSheet extends Component {
 
     render() {
         const { nowClass } = this.props
-        const { modal, buttonToChoose, nowClickGroupId } = this.state
+        const { buttonToChoose, nowClickGroupId } = this.state
         const whole = '全部'
         const noGroup = '未分組'
         const numberWhole = 0
@@ -87,7 +79,7 @@ class GroupSheet extends Component {
                                                 (group.students.map((student) => {
                                                     if (student.name !== '尚未加入') {
                                                         return <DropdownItem disabled>{student.name}</DropdownItem>
-                                                    }
+                                                    } else return student
                                                 })
                                                 )
                                             )
@@ -99,7 +91,7 @@ class GroupSheet extends Component {
                                                 if (student.name !== '尚未加入') {
 
                                                     return <DropdownItem disabled>{student.name}</DropdownItem>
-                                                }
+                                                } else return student
                                             })}
                                         </div>
                                     </div>
@@ -121,7 +113,7 @@ class GroupSheet extends Component {
 
                                                             if (student.name !== '尚未加入') {
                                                                 return <DropdownItem disabled>{student.name}</DropdownItem>
-                                                            }
+                                                            } else return student
                                                         })
                                                         )
                                                         : ('')
@@ -143,7 +135,7 @@ class GroupSheet extends Component {
                                             if (student.name !== '尚未加入') {
 
                                                 return <DropdownItem disabled>{student.name}</DropdownItem>
-                                            }
+                                            } else return student
                                         })}
                                     </div>
                                 </DropdownMenu>)

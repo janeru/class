@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Appcss from './App.css'
+import './App.css'
 import ClassAdmin from './ClassAdmin';
-import Class from '../actions/Class'
-// import { Link } from 'react-router-dom';
 import { addClass } from '../actions/Class'
 import { deleteClass } from '../actions/Class'
-import { Container, Row, Col, Jumbotron, Button, Card, CardImg, CardBlock, CardTitle, CardSubtitle, CardText, Badge, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Row, Col, Button, Card, CardImg, CardBlock, CardTitle, CardText, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 const mapStateToProps = (state) => {
   console.log(state.datas.data)
@@ -16,13 +14,11 @@ const mapStateToProps = (state) => {
   }
 
 }
-
-
-
 class ClassPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      //新增班級的modal
       modal: false,
       name: '',
       studentMaxNum: 0,
@@ -105,14 +101,14 @@ class ClassPage extends Component {
                           <Form>
                             <FormGroup>
                               <Label for="name">班級名稱</Label>
-                              <Input type="text" name="classname" id="name" placeholder=""
+                              <Input type="text" name="className" id="name" placeholder=""
 
                                 onChange={
                                   (input) => this.handleChange(input)
                                 }
                               />
                               <Label for="studentMaxNum">人數</Label>
-                              <Input type="number" name="classpeoplenum" id="studentMaxNum" placeholder=""
+                              <Input type="number" name="classPeopleNum" id="studentMaxNum" placeholder=""
                                 onChange={
                                   (input) => this.handleChange(input)
                                 }

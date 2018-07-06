@@ -3,8 +3,7 @@ import uuid from 'uuid';
 
 export const addClass = ({
     id, name = '', studentMaxNum = 0, studentsNum = 0,
-    studentsInfo = [], groups = [], students = [], count = 0
-} = {}) =>
+    studentsInfo = [], groups = [], students = [], count = 0 } = {}) =>
     ({
         type: "ADD_CLASS",
         payload: {
@@ -114,11 +113,7 @@ export const addStudentstoGroup = ({ classId, groupid, addStudentToGroupInfo, id
     )
 
 // 將學生移出小組
-export const moveStudentsawayGroup = ({ moveStudentAwayGroupInfo,
-    classId,
-    groupId,
-    id
-} = {}) =>
+export const moveStudentsawayGroup = ({ moveStudentAwayGroupInfo, classId, groupId, id } = {}) =>
     ({
         type: "MOVE_STUDENTS_AWAY_GROUP",
         payload: {

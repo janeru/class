@@ -5,7 +5,6 @@ import classReducer from "../reducers/class";
 export const store = createStore(
     combineReducers({
         datas: classReducer
-
     }),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );

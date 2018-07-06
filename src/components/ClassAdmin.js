@@ -3,10 +3,7 @@ import { connect } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Appjs from './App';
 import GroupDropdown from './GroupDropdown'
-import Class from '../actions/Class'
-import { Link } from 'react-router-dom';
 import { moveStudentsawayGroup } from '../actions/Class'
-import { awayfromNoGroup } from '../actions/Class'
 import { addStudentstoGroup } from '../actions/Class'
 import { studentsInfor } from '../actions/Class'
 import { deleteGroups } from '../actions/Class'
@@ -14,9 +11,7 @@ import { addGroups } from '../actions/Class'
 import { deleteStudents } from '../actions/Class'
 import { editStudents } from '../actions/Class'
 import { addStudents } from '../actions/Class'
-import { deleteClass } from '../actions/Class'
-import { addClass } from '../actions/Class'
-import { Container, Row, Col, Jumbotron, Button, Card, CardImg, CardBlock, CardTitle, CardSubtitle, CardText, Badge, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Row, Col, Button, Card, CardBlock, CardText, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import uuid from 'uuid';
 const mapStateToProps = (state) => {
     // console.log(state)
@@ -29,9 +24,13 @@ class ClassStudents extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            //新增學生的modal
             modal: false,
+            //編輯學生的modal
             modal2: false,
+            //點選學生 是否加入群組的modal
             modal3: false,
+            // 新增小組的modal
             modal4: false,
             name: '',
             studentSeatNum: 0,
@@ -51,8 +50,6 @@ class ClassStudents extends Component {
             deleteStudentGroupId: NaN,
 
         };
-
-        // console.log(this.props.class_Id)
     }
 
 
@@ -67,7 +64,7 @@ class ClassStudents extends Component {
             modal3: !modal3,
         }));
     }
-
+    //更新新增學生的座位數
     handleChange = (event) => {
         this.setState({ [event.target.id]: event.target.value });
     }
@@ -78,8 +75,8 @@ class ClassStudents extends Component {
         const addStudentsArray = []
         const { studentSeatNum } = this.state;
         // 帶入選哪個班級的id
-        console.log(this.props.class_Id)
         const nowClass_ID = this.props.class_Id
+        //將增加的學生的資料放到一個array裡面
         for (let i = 0; i < (Number(studentSeatNum)); i++) {
             addStudentsArray.push({ id: uuid(), name: '尚未加入' })
         }
@@ -111,8 +108,6 @@ class ClassStudents extends Component {
                         studentUpdateInfoAccount: account,
                         modal2: !modal2,
                         deleteStudentGroupId: deleteGroupId
-
-
                     }));
 
             }
@@ -135,7 +130,7 @@ class ClassStudents extends Component {
         const { groupName } = this.state;
         const classid = data.id
         this.props.addGroups({ groupName, classid })
-        this.setState(({ dropdownOpen, modal4 }) => ({ dropdownOpen: !dropdownOpen, modal4: !modal4 }));
+        this.setState(({ modal4 }) => ({ modal4: !modal4 }));
     }
     //當點選學生加入群組時的彈跳
     addStudentsGroup = (Id, Name) => () => {
@@ -150,7 +145,6 @@ class ClassStudents extends Component {
     }
     // 編輯學生暱稱
     handleSubmitNickname = (event) => {
-        console.log(this.state.modal2)
         event.preventDefault();
         const { studentUpdateInfoId, updateNickname } = this.state
         // 帶入選哪個班級的id
@@ -184,19 +178,22 @@ class ClassStudents extends Component {
         }
         if (data.count === 0) {
             return studentSeat
-        }
-        else return []
+        } else return []
     }
 
     componentWillMount() {
-
-        for (let i = 0; i < (this.props.data.length); i++) {
-            if (this.props.data[i].id === this.props.class_Id) {
-                const data = this.props.data[i]
-
+        // for (let i = 0; i < (this.props.data.length); i++) {
+        //     if (this.props.data[i].id === this.props.class_Id) {
+        //         const data = this.props.data[i]
+        //         this.props.studentsInfor({ studentsNew: this.seatArray(data), classId: this.props.class_Id })
+        //     }
+        // }
+        const datas = this.props.data
+        datas.map((data) => {
+            if (data.id === this.props.class_Id) {
                 this.props.studentsInfor({ studentsNew: this.seatArray(data), classId: this.props.class_Id })
             }
-        }
+        })
     }
 
 
@@ -204,7 +201,6 @@ class ClassStudents extends Component {
     groupInfoArray = (data) => {
         const groupIdArray = []
         data.groups.map((group) => {
-
             groupIdArray.push({ id: group.id, name: group.name })
         })
         return groupIdArray
@@ -224,7 +220,6 @@ class ClassStudents extends Component {
     // 處理將學生移開小組 (傳入要移除的組別的id以及要移除的學生的id,name)
     moveStudentAwayGroup = (classId, groupId, id, name) => () => {
         const moveStudentAwayGroupInfo = { id, name }
-        console.log(moveStudentAwayGroupInfo)
         this.props.moveStudentsawayGroup({ classId, moveStudentAwayGroupInfo, groupId, id })
 
     }
@@ -233,8 +228,8 @@ class ClassStudents extends Component {
         this.setState(({ backToClassList }) => ({ backToClassList: !backToClassList }))
     }
     render() {
-        const { modal, modal2, modal3, modal4, studentUpdateInfoId, studentUpdateInfoName,
-            studentUpdateInfoNickname, studentUpdateInfoAccount, updateNickname, addStudentGroupId, addStudentGroupName, backToClassList
+        const { modal, modal2, modal3, modal4, studentUpdateInfoName,
+            studentUpdateInfoNickname, studentUpdateInfoAccount, backToClassList
              } = this.state
 
         return (
@@ -264,7 +259,6 @@ class ClassStudents extends Component {
                                                 <Col xs="9" sm="4" className="classBox">
 
                                                     <div className="chooseClassName">
-
                                                         {data.name}
                                                         <i class="fas fa-user" style={{ color: '#347fc1ba', margin: '5px' }}></i>
                                                         {data.studentsNum !== undefined ? data.studentsNum + "/" + data.studentMaxNum : 0 + "/" + data.studentMaxNum}
@@ -284,7 +278,7 @@ class ClassStudents extends Component {
                                                                                     <div style={{ color: '#795548', fontWeight: 'bold', fontSize: '1.2rem' }}>{group.name}</div>
                                                                                     <div>
                                                                                         <Button color="secondary" onClick={this.handleSubmitDeleteGroup(group.students, group.id)} className="deleteGroup">刪除小組</Button>
-                                                                                        <Row className="justify-content-between">
+                                                                                        <Row className="justify-conten t-between">
                                                                                             {
 
                                                                                                 group.students.map(student => {
@@ -293,7 +287,6 @@ class ClassStudents extends Component {
                                                                                                         <div className="groupStudent">
                                                                                                             <i class="fas fa-child" style={{ color: '#4caf50ad' }} onClick={this.moveStudentAwayGroup(data.id, group.id, student.id, student.name)}></i>
                                                                                                             <div key={student.id} onClick={this.renewStudent(data, student.id, student.name, group.id)}>
-
                                                                                                                 {student.name}
                                                                                                             </div>
                                                                                                         </div>)
@@ -324,7 +317,6 @@ class ClassStudents extends Component {
                                                             </CardText>
                                                         </CardBlock>
                                                     </Card>
-                                                    {/* <Col xs="3" className="classBox2"> */}
                                                     <Row className="justify-content-around">
                                                         {
 
@@ -333,7 +325,6 @@ class ClassStudents extends Component {
                                                                     <div className="noGroupStudent">
                                                                         <i class="fas fa-bookmark" style={{ color: '#795548e3' }} onClick={this.addStudentsGroup(student.id, student.name)}></i>
                                                                         <div key={student.id} style={{ margin: '10px' }} onClick={this.renewStudent(data, student.id, student.name, )}>
-
                                                                             {student.name}
                                                                         </div>
 
@@ -473,11 +464,6 @@ const mapDispatchToProps = {
     deleteGroups,
     addStudentstoGroup,
     moveStudentsawayGroup
-
-
-
-
-
 }
 
 
