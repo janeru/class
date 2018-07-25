@@ -18,18 +18,22 @@ class ClassPage extends Component {
     super(props);
     this.state = {
       //新增班級的modal
-      modal: false,
+      addClassModal: false,
       name: '',
       studentMaxNum: 0,
       classAdminPage: false,
       classId: NaN,
       //是否要刪除班級的modal
-      modalDeleteClass: false
+      modalDeleteClass: false,
+      randomPhotoNum: [1079, 1080, 1081]
     };
   }
+
+
   //控制新增班級的modal的彈跳
-  toggle = () => {
-    this.setState(({ modal }) => ({ modal: !modal }));
+  toggleAddClass = () => {
+
+    this.setState(({ addClassModal }) => ({ addClassModal: !addClassModal }));
   }
   //控制刪除班級的modal的彈跳
   toggleDeleteClass = () => {
@@ -37,33 +41,37 @@ class ClassPage extends Component {
   }
 
   //控制班級頁面是否出現，哪個班級的資料跟index也傳進來
-  classAdminFunc = (data, index) => () => {
+  class_AdminPage = (id) => () => {
     this.setState(({ classAdminPage, classId }) => ({
       classAdminPage: !classAdminPage,
-      classId: data.id
+      classId: id
     }))
   }
 
   handleChange = (event) => {
     this.setState({ [event.target.id]: event.target.value });
   }
+
   //輸入進來的data存放的地方
   handleSubmit = (event) => {
     event.preventDefault();
     const { name, studentMaxNum } = this.state;
     this.props.addClass({ name, studentMaxNum })
-    this.setState(({ modal }) => ({ name: "", studentMaxNum: 0, modal: !modal }))
+    this.setState(({ addClassModal, randomPhotoNum }) => ({
+      name: "", studentMaxNum: 0, addClassModal: !addClassModal,
+      randomPhotoNum: [...randomPhotoNum, randomPhotoNum.push(Math.floor(Math.random() * 100))]
+    }))
   }
   //確認是否刪除班級
-  handleDeleteClass = (data) => () => {
+  handleDeleteClass = (id) => () => {
 
-    this.props.deleteClass({ id: data.id })
+    this.props.deleteClass({ id: id })
     this.setState(({ modalDeleteClass }) => ({ modalDeleteClass: !modalDeleteClass }))
   }
 
 
   render() {
-    const { modal, classAdminPage, classId, modalDeleteClass } = this.state
+    const { addClassModal, classAdminPage, classId, modalDeleteClass, randomPhotoNum } = this.state
     const classDatas = this.props.classDatas
     return (
       <div>
@@ -72,35 +80,33 @@ class ClassPage extends Component {
           (
             <div>
               <Row style={{ backgroundColor: '#2196f329', height: '13vh' }}>
-                <Button color="secondary" className="buttonClass" onClick={this.toggle}>新增班級</Button>
+                <Button outline color="secondary" className="buttonClass" onClick={this.toggleAddClass}>新增班級</Button>
               </Row>
-              <Row className="justify-content-between" >
-                {console.log(classDatas)}
-                {classDatas.map(classData => (
+              <Row className="justify-content-between">
 
+                {classDatas.map(({ id, name, studentsNum, studentMaxNum }, index) => (
 
                   //  <Col xs="4"> => 12/4=3 就是每排可以放3張照片，每3張放在一欄就換一行
                   //  xs 用在1000以下的小螢幕
-                  classData.studentMaxNum > 0 ?
+                  (studentMaxNum > 0) ?
                     <Col xs="12" sm="4">
                       <Card className="content" >
-
-                        <CardImg width="100%" height="250vh" src="https://picsum.photos/800/900?image=1067" alt="Card image cap"
-                          onClick={this.classAdminFunc(classData)}
+                        <CardImg width="100%" height="250vh" src={"https://picsum.photos/800/900?image=" + randomPhotoNum[index]} alt="Card image cap"
+                          onClick={this.class_AdminPage(id)}
                         />
                         <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }}
                           onClick={this.toggleDeleteClass} />
                         <CardBlock>
                           <CardTitle>
-                            {classData.name}
+                            {name}
                           </CardTitle>
                           <CardText>
-                            {classData.studentsNum + "/" + classData.studentMaxNum}
+                            {studentsNum + "/" + studentMaxNum}
                           </CardText>
                         </CardBlock>
                         {/* 新增後所彈跳出來的Modal */}
-                        <Modal isOpen={modal} toggle={this.toggle}>
-                          <ModalHeader toggle={this.toggle}>新增班級</ModalHeader>
+                        <Modal isOpen={addClassModal} toggle={this.toggleAddClass}>
+                          <ModalHeader toggle={this.toggleAddClass}>新增班級</ModalHeader>
                           <ModalBody>
                             <Form>
                               <FormGroup>
@@ -109,8 +115,7 @@ class ClassPage extends Component {
                                   onChange={this.handleChange} />
                                 <Label for="studentMaxNum">人數</Label>
                                 <Input type="number" name="classPeopleNum" id="studentMaxNum" placeholder=""
-                                  onChange={this.handleChange}
-                                />
+                                  onChange={this.handleChange} />
                               </FormGroup>
                             </Form>
                           </ModalBody>
@@ -127,7 +132,7 @@ class ClassPage extends Component {
                             您確定要刪除班級嗎？這將會遺失所有學生資料。
                 </ModalBody>
                           <ModalFooter>
-                            <Button color="danger" onClick={this.handleDeleteClass(classData)}>
+                            <Button color="danger" onClick={this.handleDeleteClass(id)}>
                               確認刪除
                 </Button>
                           </ModalFooter>
