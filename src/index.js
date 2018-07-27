@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import { store } from "./store/configureStore";
 import { createStore, applyMiddleware } from 'redux';
 import Class from "./components/Class";
+import "./index.css"
 
 const createStoreWithMiddleware = applyMiddleware()(createStore)
 const jsx = (
