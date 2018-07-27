@@ -107,7 +107,6 @@ const classReducer = (state = initialState, action) => {
             return {
                 // id是第幾筆資料的id
                 ...state, data: state.data.filter(({ id }) => {
-                    console.log(id !== action.id)
                     return id !== action.id
                 })
             }
@@ -118,7 +117,8 @@ const classReducer = (state = initialState, action) => {
                         //先看看要加入哪個班級
                         if (data.id === action.payload.classId) {
                             return {
-                                ...data, count: action.payload.count + 1,
+                                ...data,
+                                count: action.payload.count + 1,
                                 students: { ...data.students, ...action.payload.studentsNew },
                                 studentsId: [...action.payload.studentsId]
                             }
