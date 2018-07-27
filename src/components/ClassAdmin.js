@@ -44,8 +44,7 @@ class ClassStudents extends Component {
             backToClassList: false,
             //要刪除學生的小組id
             deleteStudentGroupId: NaN,
-            //要修改學生暱稱的id
-            editStudentGroupId: NaN
+
 
         };
     }
@@ -100,7 +99,7 @@ class ClassStudents extends Component {
             //更新匿名
             const nickName = student.nickname
             this.setState(({ modalEditStudents, studentUpdateInfoId, studentUpdateInfoName,
-                studentUpdateInfoNickname, studentUpdateInfoAccount, deleteStudentGroupId, editStudentGroupId }) => ({
+                studentUpdateInfoNickname, studentUpdateInfoAccount, deleteStudentGroupId }) => ({
 
                     studentUpdateInfoId: student.id,
                     studentUpdateInfoName: student.name,
@@ -108,7 +107,7 @@ class ClassStudents extends Component {
                     studentUpdateInfoAccount: account,
                     modalEditStudents: !modalEditStudents,
                     deleteStudentGroupId: groupId,
-                    editStudentGroupId: groupId
+
                 }));
         } else return ('')
 
@@ -144,10 +143,10 @@ class ClassStudents extends Component {
     // 編輯學生暱稱
     handleSubmitNickname = (event) => {
         event.preventDefault();
-        const { studentUpdateInfoId, updateNickname, editStudentGroupId } = this.state
+        const { studentUpdateInfoId, updateNickname } = this.state
         // 帶入選哪個班級的id
         const nowStudentClass_ID = this.props.class_Id
-        this.props.editStudents({ nowStudentClass_ID, studentUpdateInfoId, updateNickname, editStudentGroupId })
+        this.props.editStudents({ nowStudentClass_ID, studentUpdateInfoId, updateNickname })
         this.setState(({ modalEditStudents }) => ({ updateNickname: '', modalEditStudents: !modalEditStudents }))
 
     }
@@ -162,8 +161,6 @@ class ClassStudents extends Component {
 
     //傳入要刪除組別的班級classId以及組別的id 也要傳入要移出去的組別的學生id及姓名
     handleSubmitDeleteGroup = (groupStudents, id) => () => {
-        console.log(groupStudents)
-        console.log(id)
         const { class_Id: classId } = this.props
         this.props.deleteGroups({ groupStudents, classId, id })
     }
@@ -173,13 +170,9 @@ class ClassStudents extends Component {
             const nullStudents = studentsId[studentsId.length - 1] + 1
             studentSeat[nullStudents] = { id: nullStudents, name: '尚未加入' }
             studentsId[studentsNum + i - 1] = nullStudents
-            console.log(nullStudents)
+
         }
-        console.log(studentSeat)
-        console.log(studentsId)
         if (count === 0) {
-            console.log(studentSeat)
-            console.log(studentsId)
             return [studentSeat, studentsId]
         } else return ('')
     }
@@ -193,15 +186,10 @@ class ClassStudents extends Component {
                     const seatInfo = this.seatArray({ ...classData })
                     return this.props.studentsInfor({ studentsNewInfo: seatInfo[0], studentsId: seatInfo[1], classId: this.props.class_Id, count: 0 })
                 } else return ('')
-
-
-
             } else return classData
         })
 
     }
-
-
     // 將這個班級的每個組別的id 弄成array
     groupInfoArray = (data) => {
         const groupIdArray = []
@@ -210,15 +198,11 @@ class ClassStudents extends Component {
         })
         return groupIdArray
     }
-
-
-
     // 處理增加學生進入小組 (傳入要加入的空座位的組別的id以及要加入的學生的id,name)
     handleAddstudentsGroup = (classId, groupId) => () => {
         const id = this.state.addStudentGroupId
         const name = this.state.addStudentGroupName
         const addStudentToGroupInfo = { [id]: { id, name } }
-        console.log(addStudentToGroupInfo)
         this.setState(({ modalStudentsToGroup }) => ({ modalStudentsToGroup: !modalStudentsToGroup }))
         this.props.addStudentstoGroup({ classId, groupId, id, addStudentToGroupInfo })
     }
@@ -228,7 +212,6 @@ class ClassStudents extends Component {
         this.props.moveStudentsawayGroup({ classId, moveStudentAwayGroupInfo, groupId, id })
 
     }
-
     isBackToClassList = () => {
         this.setState(({ backToClassList }) => ({ backToClassList: !backToClassList }))
     }
