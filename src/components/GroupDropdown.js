@@ -5,11 +5,14 @@ import { Col, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 
 
 const mapStateToProps = (state) => {
     return {
-        data: state.datas.data,
+        classDatas: state.classDatas.data
     }
 }
-
-
+const whole = '全部'
+const noGroup = '未分組'
+const numberWhole = 0
+const numberGroup = 1
+const numberNoGroup = 2
 class GroupSheet extends Component {
     constructor(props) {
         super(props);
@@ -27,21 +30,13 @@ class GroupSheet extends Component {
     toggleSheet = () => {
         this.setState(({ dropdownOpen }) => ({ dropdownOpen: !dropdownOpen }));
     }
-
     changeValue = (name, id, number) => () => {
+        console.log('', name, '', id, '', number)
         this.setState(({ dropDownValue, buttonToChoose, nowClickGroupId }) => ({ dropDownValue: name, nowClickGroupId: id, buttonToChoose: number }))
     }
-
-
     render() {
         const { nowClass } = this.props
         const { buttonToChoose, nowClickGroupId } = this.state
-        const whole = '全部'
-        const noGroup = '未分組'
-        const numberWhole = 0
-        const numberGroup = 1
-        const numberNoGroup = 2
-
 
 
         return (
@@ -50,7 +45,7 @@ class GroupSheet extends Component {
                 {/* 如果班級的group長度不為0 => 就顯示組別以及其組員
                 但是如果班級的長度為0 => 就顯示學生 */}
                 <Col className="dropdownRow">
-
+                    {console.log(nowClass)}
                     <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleSheet}>
                         <DropdownToggle caret color="warning" className="dropdownMenu" >
                             {this.state.dropDownValue}
@@ -67,32 +62,24 @@ class GroupSheet extends Component {
                         {/* 如果點到全部，有正常名字的都要顯示出來 */}
                         <div className="clickGroupStuentsItem">
                             {(buttonToChoose === 0) ? (
-
-
                                 <DropdownMenu id="Item">
                                     <div >
 
                                         <div>
 
                                             {nowClass.groups.map((group) =>
-
-                                                (group.students.map((student) => {
-                                                    if (student.name !== '尚未加入') {
-                                                        return <DropdownItem disabled>{student.name}</DropdownItem>
-                                                    } else return student
+                                                nowClass.studentsId.map((id, index) => {
+                                                    return (group.students[id] && group.students[id].name !== '尚未加入') ? <DropdownItem disabled>{group.students[id].name}</DropdownItem> : ('')
                                                 })
-                                                )
                                             )
                                             }
                                         </div>
 
                                         <div>
-                                            {nowClass.students.map((student) => {
-                                                if (student.name !== '尚未加入') {
-
-                                                    return <DropdownItem disabled>{student.name}</DropdownItem>
-                                                } else return student
+                                            {nowClass.studentsId.map((id, index) => {
+                                                return (nowClass.students[id] && nowClass.students[id].name !== '尚未加入') ? <DropdownItem disabled>{nowClass.students[id].name}</DropdownItem> : ('')
                                             })}
+
                                         </div>
                                     </div>
                                 </DropdownMenu>
@@ -100,24 +87,17 @@ class GroupSheet extends Component {
 
                             {/* 先確認是點到組別，在確定是點到哪一個組別，並顯示該組別的學生名字 */}
                             {(buttonToChoose === 1) ? (
-                                nowClass.groups.length === 0 ? (''
-
-                                ) : (
+                                nowClass.groups.length === 0 ? ('') :
+                                    (
                                         <DropdownMenu id="Item">
                                             <div >
                                                 {/* 顯示是哪一個組別以及組員有誰 */}
                                                 {nowClass.groups.map((group) =>
                                                     (group.id === nowClickGroupId) ?
-
-                                                        (group.students.map((student) => {
-
-                                                            if (student.name !== '尚未加入') {
-                                                                return <DropdownItem disabled>{student.name}</DropdownItem>
-                                                            } else return student
+                                                        nowClass.studentsId.map((id, index) => {
+                                                            return (group.students[id] && group.students[id].name !== '尚未加入') ? <DropdownItem disabled>{group.students[id].name}</DropdownItem> : ('')
                                                         })
-                                                        )
                                                         : ('')
-
                                                 )
                                                 }
                                             </div>
@@ -125,22 +105,24 @@ class GroupSheet extends Component {
                                     )
                             ) : ('')}
 
-                            {/* 如果點到沒有組別，那麼就要顯示沒有組別的名字 */}
-                            {(buttonToChoose === 2) ? (
-
+                            {/* 如果點到沒有組別，那麼就要顯示沒有組別的的人的名字 */}
+                            {(buttonToChoose === 2) ?
                                 <DropdownMenu id="Item">
                                     <div >
+                                        {
+                                            <div>
+                                                {console.log(nowClass.studentsId)}
+                                                {nowClass.studentsId.map((id, index) => {
+                                                    return (nowClass.students[id] && nowClass.students[id].name !== '尚未加入') ? <DropdownItem disabled>{nowClass.students[id].name}</DropdownItem> : ('')
+                                                })}
 
-                                        {nowClass.students.map((student) => {
-                                            if (student.name !== '尚未加入') {
+                                            </div>
 
-                                                return <DropdownItem disabled>{student.name}</DropdownItem>
-                                            } else return student
-                                        })}
+                                        }
                                     </div>
-                                </DropdownMenu>)
-                                : ('')}
-
+                                </DropdownMenu>
+                                : ('')
+                            }
                         </div>
                     </ButtonDropdown>
 
