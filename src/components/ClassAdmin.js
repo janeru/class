@@ -10,7 +10,6 @@ import {
 } from '../actions/Class'
 import { Row, Col, Button, Card, CardBlock, CardText, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 const mapStateToProps = (state) => {
-    console.log(state.classDatas.data)
     return {
         classDatas: state.classDatas.data
     }
@@ -46,6 +45,7 @@ class ClassStudents extends Component {
             deleteStudentGroupId: NaN,
 
 
+
         };
     }
 
@@ -75,9 +75,9 @@ class ClassStudents extends Component {
         const nowClass_ID = this.props.class_Id
         for (let i = 1; i <= Number(studentSeatNum); i++) {
             const nowNum = studentsId[studentsId.length - 1] + 1
-            console.log(nowNum)
+
             obj[nowNum] = { id: nowNum, name: '尚未加入' }
-            console.log(obj[nowNum])
+
             studentsId[studentMaxNum + i - 1] = nowNum
         }
         // 加總人數
@@ -91,26 +91,31 @@ class ClassStudents extends Component {
     }
 
     //更新要編輯的學生的id,名字,暱稱,帳戶以及位在哪一個組別的id
-    renewStudent = (student, groupId) => () => {
+    renewStudent = (classId, studentId, groupId, studentName) => () => {
         // 如果id相符的話，就更新匿名跟帳號
-        if (student !== undefined) {
-            //更新帳號
-            const account = student.account
-            //更新匿名
-            const nickName = student.nickname
-            this.setState(({ modalEditStudents, studentUpdateInfoId, studentUpdateInfoName,
-                studentUpdateInfoNickname, studentUpdateInfoAccount, deleteStudentGroupId }) => ({
+        const { classDatas } = this.props
+        classDatas.map(classData => {
+            if (classData.id === classId) {
+                if (studentName !== '尚未加入') {
 
-                    studentUpdateInfoId: student.id,
-                    studentUpdateInfoName: student.name,
-                    studentUpdateInfoNickname: nickName,
-                    studentUpdateInfoAccount: account,
-                    modalEditStudents: !modalEditStudents,
-                    deleteStudentGroupId: groupId,
+                    const student = classData.studentsInfo[studentId]
 
-                }));
-        } else return ('')
-
+                    //更新帳號
+                    const account = student.account
+                    //更新匿名
+                    const nickName = student.nickname
+                    this.setState(({ modalEditStudents, studentUpdateInfoId, studentUpdateInfoName,
+                        studentUpdateInfoNickname, studentUpdateInfoAccount, deleteStudentGroupId }) => ({
+                            studentUpdateInfoId: student.id,
+                            studentUpdateInfoName: student.name,
+                            studentUpdateInfoNickname: nickName,
+                            studentUpdateInfoAccount: account,
+                            modalEditStudents: !modalEditStudents,
+                            deleteStudentGroupId: groupId,
+                        }));
+                } else return ('')
+            } else return ('')
+        })
 
 
     }
@@ -122,12 +127,52 @@ class ClassStudents extends Component {
     handleChangeGroup = (event) => {
         this.setState({ [event.target.id]: event.target.value });
     }
+    seatArray = ({ studentMaxNum, studentsNum, studentsId, count }) => {
+        const studentSeat = {}
+        if (studentsNum !== 0) {
+            for (let i = 1; i <= (studentMaxNum - studentsNum); i++) {
+                const nullStudents = studentsId[studentsId.length - 1] + 1
+                studentSeat[nullStudents] = { id: nullStudents, name: '尚未加入' }
+                studentsId[studentsNum + i - 1] = nullStudents
+            }
+            if (count === 0) {
+                return [studentSeat, studentsId]
+            } else return ('')
+        }
+        else {
+            const studentSeatNewClass = {}
+            const arr = []
+            for (let i = 1; i <= studentMaxNum; i++) {
+                studentSeatNewClass[arr.length + 1] = { id: i, name: '尚未加入' }
+                arr.push(i)
+            }
+            if (count === 0) {
+                return [studentSeatNewClass, arr]
+            } else return ('')
+
+
+        }
+    }
+    componentWillMount() {
+        // 處理尚未分組要顯示的座位
+        const { classDatas } = this.props
+        classDatas.map((classData) => {
+            if (classData.id === this.props.class_Id) {
+
+                if (classData.count === 0) {
+
+                    const seatInfo = this.seatArray({ ...classData })
+
+                    return this.props.studentsInfor({ studentsNewInfo: seatInfo[0], studentsId: seatInfo[1], classId: this.props.class_Id, count: 0 })
+                } else return ('')
+            } else return classData
+        })
+
+    }
     //新增組別
     //輸入進來的data存放的地方(儲存班級的id以及小組的名稱)
     handleSubmitGroup = (classId) => () => {
         const { groupName } = this.state;
-        console.log(groupName)
-        console.log(classId)
         this.props.addGroups({ groupName, classId })
         this.setState(({ modalAddGroup }) => ({ modalAddGroup: !modalAddGroup }));
     }
@@ -164,32 +209,7 @@ class ClassStudents extends Component {
         const { class_Id: classId } = this.props
         this.props.deleteGroups({ groupStudents, classId, id })
     }
-    seatArray = ({ studentMaxNum, studentsNum, studentsId, count }) => {
-        const studentSeat = {}
-        for (let i = 1; i <= (studentMaxNum - studentsNum); i++) {
-            const nullStudents = studentsId[studentsId.length - 1] + 1
-            studentSeat[nullStudents] = { id: nullStudents, name: '尚未加入' }
-            studentsId[studentsNum + i - 1] = nullStudents
 
-        }
-        if (count === 0) {
-            return [studentSeat, studentsId]
-        } else return ('')
-    }
-
-    componentWillMount() {
-        // 處理尚未分組要顯示的座位
-        const { classDatas } = this.props
-        classDatas.map((classData) => {
-            if (classData.id === this.props.class_Id) {
-                if (classData.count === 0) {
-                    const seatInfo = this.seatArray({ ...classData })
-                    return this.props.studentsInfor({ studentsNewInfo: seatInfo[0], studentsId: seatInfo[1], classId: this.props.class_Id, count: 0 })
-                } else return ('')
-            } else return classData
-        })
-
-    }
     // 將這個班級的每個組別的id 弄成array
     groupInfoArray = (data) => {
         const groupIdArray = []
@@ -239,181 +259,186 @@ class ClassStudents extends Component {
                                 this.props.class_Id === classData.id ?
 
                                     (
-                                        <div>
-                                            <Row className="photo" style={{ backgroundColor: '#9e9e9e1f' }}>
-                                                <div className="dropDownColor">
-                                                    <GroupDropdown nowClass={classData} />
-                                                </div>
-                                                <Button color="primary" className="buttonGroup" onClick={this.toggleNewGroup}>新增小組</Button>
+                                        classData.studentId === [] ? ('Please wait') :
+                                            (<div>
 
-                                                <Col xs="9" sm="4" className="classBox">
-                                                    <div className="chooseClassName">
-                                                        {classData.name}
-                                                        <i class="fas fa-user" style={{ color: '#347fc1ba', margin: '5px' }}></i>
-                                                        {classData.studentsNum + "/" + classData.studentMaxNum}
+                                                <Row className="photo" style={{ backgroundColor: '#9e9e9e1f' }}>
+
+                                                    <div className="dropDownColor">
+                                                        <GroupDropdown nowClass={classData} />
                                                     </div>
-                                                    <Card className="content">
+                                                    <Button color="primary" className="buttonGroup" onClick={this.toggleNewGroup}>新增小組</Button>
 
-                                                        <CardBlock>
+                                                    <Col xs="9" sm="4" className="classBox">
+                                                        <div className="chooseClassName">
+                                                            {classData.name}
+                                                            <i class="fas fa-user" style={{ color: '#347fc1ba', margin: '5px' }}></i>
+                                                            {classData.studentsNum + "/" + classData.studentMaxNum}
+                                                        </div>
+                                                        <Card className="content">
 
-                                                            <CardText>
+                                                            <CardBlock>
 
-                                                                {classData.groups.length !== 0 ?
-                                                                    // 有組別
-                                                                    (<div>
-                                                                        {classData.groups.map((group) => {
+                                                                <CardText>
 
-                                                                            return (
-                                                                                <div>
+                                                                    {classData.groups.length !== 0 ?
+                                                                        // 有組別
+                                                                        (<div>
+                                                                            {classData.groups.map((group) => {
 
-                                                                                    <div style={{ color: '#795548', fontWeight: 'bold', fontSize: '1.2rem' }}>{group.name}</div>
+                                                                                return (
                                                                                     <div>
-                                                                                        <Button color="secondary" onClick={this.handleSubmitDeleteGroup(group.students, group.id)} className="deleteGroup">刪除小組</Button>
-                                                                                        <Row className="justify-content-between">
-                                                                                            {
-                                                                                                classData.studentsId.map((studentId) => {
-                                                                                                    return group.students[studentId] ?
-                                                                                                        (<div className="groupStudent">
-                                                                                                            <i class="fas fa-child" style={{ color: '#4caf50ad' }} onClick={this.moveStudentAwayGroup(classData.id, group.id, group.students[studentId].id, group.students[studentId].name)}></i>
 
-                                                                                                            <div onClick={this.renewStudent(classData.studentsInfo[group.students[studentId].id], group.id)}>
-                                                                                                                {group.students[studentId].name}
-                                                                                                            </div>
+                                                                                        <div style={{ color: '#795548', fontWeight: 'bold', fontSize: '1.2rem' }}>{group.name}</div>
+                                                                                        <div>
+                                                                                            <Button color="secondary" onClick={this.handleSubmitDeleteGroup(group.students, group.id)} className="deleteGroup">刪除小組</Button>
+                                                                                            <Row className="justify-content-between">
+                                                                                                {
+                                                                                                    classData.studentsId.map((studentId) => {
+                                                                                                        return group.students[studentId] ?
+                                                                                                            (<div className="groupStudent">
 
-                                                                                                        </div>)
-                                                                                                        : ('')
-                                                                                                })
+                                                                                                                <i class="fas fa-child" style={{ color: '#4caf50ad' }} onClick={this.moveStudentAwayGroup(classData.id, group.id, group.students[studentId].id, group.students[studentId].name)}></i>
+                                                                                                                <div onClick={this.renewStudent(classData.id, studentId, group.id, group.students[studentId].name)}>
+                                                                                                                    {group.students[studentId].name}
+                                                                                                                </div>
 
-                                                                                            }
+                                                                                                            </div>)
+                                                                                                            : ('')
+                                                                                                    })
+
+                                                                                                }
 
 
-                                                                                        </Row>
+                                                                                            </Row>
+                                                                                        </div>
                                                                                     </div>
+                                                                                )
+                                                                            })}
+                                                                        </div>) : ('')
+                                                                    }
+                                                                </CardText>
+                                                            </CardBlock>
+                                                        </Card>
+                                                        <Row className="justify-content-around">
+                                                            {
+
+                                                                classData.studentsId.map((studentId, i) => {
+
+                                                                    return classData.students[studentId] ?
+                                                                        (
+                                                                            <div className="noGroupStudent">
+
+                                                                                <i class="fas fa-bookmark" style={{ color: '#795548e3' }} onClick={this.addStudentsGroup(classData.students[studentId].id, classData.students[studentId].name)}></i>
+
+                                                                                <div key={i} style={{ margin: '10px' }} onClick={this.renewStudent(classData.id, studentId, '', classData.students[studentId].name)}>
+                                                                                    {classData.students[studentId].name}
                                                                                 </div>
-                                                                            )
-                                                                        })}
-                                                                    </div>) : ('')
-                                                                }
-                                                            </CardText>
-                                                        </CardBlock>
-                                                    </Card>
-                                                    <Row className="justify-content-around">
-                                                        {
 
-                                                            classData.studentsId.map((studentId, i) => {
-                                                                return classData.students[studentId] ?
-                                                                    (
-                                                                        <div className="noGroupStudent">
-
-                                                                            <i class="fas fa-bookmark" style={{ color: '#795548e3' }} onClick={this.addStudentsGroup(classData.students[studentId].id, classData.students[studentId].name)}></i>
-
-                                                                            <div key={i} style={{ margin: '10px' }} onClick={this.renewStudent(classData.studentsInfo[classData.students[studentId].id], '')}>
-                                                                                {classData.students[studentId].name}
                                                                             </div>
+                                                                        ) : ('')
 
-                                                                        </div>
-                                                                    ) : ('')
+                                                                })
+                                                            }
+                                                        </Row>
+                                                    </Col>
 
-                                                            })
-                                                        }
-                                                    </Row>
-                                                </Col>
+                                                    {/* </Col> */}
+                                                    {/* 新增學生的Modal */}
+                                                    <Modal isOpen={modalAddStudents} toggle={this.toggleAddStudents}>
 
-                                                {/* </Col> */}
-                                                {/* 新增學生的Modal */}
-                                                <Modal isOpen={modalAddStudents} toggle={this.toggleAddStudents}>
-
-                                                    <ModalHeader toggle={this.toggleAddStudents}>新增學生</ModalHeader>
-                                                    <ModalBody>
-                                                        <Form>
-                                                            <FormGroup>
-                                                                <Label for="studentSeatNum">座位數</Label>
-                                                                <Input type="number" name="studentSeatNum" id="studentSeatNum" placeholder=""
-                                                                    onChange={this.handleChange} />
-                                                            </FormGroup>
-                                                        </Form>
-                                                    </ModalBody>
-                                                    <ModalFooter>
-                                                        <Button onClick={this.handleSubmit(classData.studentMaxNum, classData.studentsNum, classData.studentsId)}>
-                                                            儲存
+                                                        <ModalHeader toggle={this.toggleAddStudents}>新增學生</ModalHeader>
+                                                        <ModalBody>
+                                                            <Form>
+                                                                <FormGroup>
+                                                                    <Label for="studentSeatNum">座位數</Label>
+                                                                    <Input type="number" name="studentSeatNum" id="studentSeatNum" placeholder=""
+                                                                        onChange={this.handleChange} />
+                                                                </FormGroup>
+                                                            </Form>
+                                                        </ModalBody>
+                                                        <ModalFooter>
+                                                            <Button onClick={this.handleSubmit(classData.studentMaxNum, classData.studentsNum, classData.studentsId)}>
+                                                                儲存
                                             </Button>
 
-                                                    </ModalFooter>
-                                                </Modal>
+                                                        </ModalFooter>
+                                                    </Modal>
 
-                                                {/* 修改學生資料的Modal */}
-                                                <Modal isOpen={modalEditStudents} toggle={this.toggleEditStudent}>
-                                                    <ModalHeader toggle={this.toggleEditStudent}>
-                                                        {studentUpdateInfoName}
-                                                    </ModalHeader>
-                                                    <ModalBody>
-                                                        <Form>
-                                                            <FormGroup>
-                                                                <Label for="updateNickname">暱稱：
+                                                    {/* 修改學生資料的Modal */}
+                                                    <Modal isOpen={modalEditStudents} toggle={this.toggleEditStudent}>
+                                                        <ModalHeader toggle={this.toggleEditStudent}>
+                                                            {studentUpdateInfoName}
+                                                        </ModalHeader>
+                                                        <ModalBody>
+                                                            <Form>
+                                                                <FormGroup>
+                                                                    <Label for="updateNickname">暱稱：
                                                         {/* {studentUpdateInfoNickname} */}
-                                                                </Label>
-                                                                <Input type="text" name="updateNickname" id="updateNickname" placeholder={studentUpdateInfoNickname}
-                                                                    onChange={this.handleChangeNickName} />
-                                                                <Label for="studentAccount">帳號：{studentUpdateInfoAccount}
+                                                                    </Label>
+                                                                    <Input type="text" name="updateNickname" id="updateNickname" placeholder={studentUpdateInfoNickname}
+                                                                        onChange={this.handleChangeNickName} />
+                                                                    <Label for="studentAccount">帳號：{studentUpdateInfoAccount}
 
-                                                                </Label>
-                                                            </FormGroup>
-                                                        </Form>
-                                                    </ModalBody>
-                                                    <ModalFooter>
-                                                        <Button onClick={this.handleSubmitNickname}>
-                                                            儲存
+                                                                    </Label>
+                                                                </FormGroup>
+                                                            </Form>
+                                                        </ModalBody>
+                                                        <ModalFooter>
+                                                            <Button onClick={this.handleSubmitNickname}>
+                                                                儲存
                                             </Button>
-                                                        <Button>
-                                                            <i class="fas fa-trash" onClick={this.handleSubmitDeleteStudent} />
-                                                            刪除
+                                                            <Button>
+                                                                <i class="fas fa-trash" onClick={this.handleSubmitDeleteStudent} />
+                                                                刪除
                                             </Button>
 
-                                                    </ModalFooter>
-                                                </Modal>
+                                                        </ModalFooter>
+                                                    </Modal>
 
 
 
-                                            </Row>
+                                                </Row>
 
-                                            {/* 放尚未加入組別的學生  以及 空座位數 */}
-                                            <div>
-                                                {/* 放的是尚未加入組別的學生以及剩下的空坐位數，並將要加入小組的學生的id記錄下來 */}
-                                                <Modal isOpen={modalStudentsToGroup} toggle={this.toggleStudentsGroup}>
-                                                    <ModalHeader toggle={this.toggleStudentsGroup}>
-                                                        請按下要加入的組別
+                                                {/* 放尚未加入組別的學生  以及 空座位數 */}
+                                                <div>
+                                                    {/* 放的是尚未加入組別的學生以及剩下的空坐位數，並將要加入小組的學生的id記錄下來 */}
+                                                    <Modal isOpen={modalStudentsToGroup} toggle={this.toggleStudentsGroup}>
+                                                        <ModalHeader toggle={this.toggleStudentsGroup}>
+                                                            請按下要加入的組別
                                             </ModalHeader>
 
-                                                    <ModalBody>
-                                                        {this.groupInfoArray(classData).map((group) => {
-                                                            return <div
-                                                                onClick={this.handleAddstudentsGroup(classData.id, group.id)}>{group.name}</div>
-                                                        })
-                                                        }
-                                                    </ModalBody>
+                                                        <ModalBody>
+                                                            {this.groupInfoArray(classData).map((group) => {
+                                                                return <div
+                                                                    onClick={this.handleAddstudentsGroup(classData.id, group.id)}>{group.name}</div>
+                                                            })
+                                                            }
+                                                        </ModalBody>
 
-                                                </Modal>
-                                                {/* 新增小組的Modal */}
-                                                <Modal isOpen={modalAddGroup} toggle={this.toggleNewGroup}>
-                                                    <ModalHeader toggle={this.toggleNewGroup}>新增小組</ModalHeader>
-                                                    <ModalBody>
-                                                        <Form>
-                                                            <FormGroup>
-                                                                <Label for="groupName">小組名稱</Label>
-                                                                <Input type="text" name="groupName" id="groupName" placeholder=""
-                                                                    onChange={this.handleChangeGroup} />
-                                                            </FormGroup>
-                                                        </Form>
-                                                    </ModalBody>
-                                                    <ModalFooter>
-                                                        <Button onClick={this.handleSubmitGroup(classData.id)}>
+                                                    </Modal>
+                                                    {/* 新增小組的Modal */}
+                                                    <Modal isOpen={modalAddGroup} toggle={this.toggleNewGroup}>
+                                                        <ModalHeader toggle={this.toggleNewGroup}>新增小組</ModalHeader>
+                                                        <ModalBody>
+                                                            <Form>
+                                                                <FormGroup>
+                                                                    <Label for="groupName">小組名稱</Label>
+                                                                    <Input type="text" name="groupName" id="groupName" placeholder=""
+                                                                        onChange={this.handleChangeGroup} />
+                                                                </FormGroup>
+                                                            </Form>
+                                                        </ModalBody>
+                                                        <ModalFooter>
+                                                            <Button onClick={this.handleSubmitGroup(classData.id)}>
 
-                                                            儲存
+                                                                儲存
                         </Button>
-                                                    </ModalFooter>
-                                                </Modal>
-                                            </div>
-                                        </div>) :
+                                                        </ModalFooter>
+                                                    </Modal>
+                                                </div>
+                                            </div>)
+                                    ) :
                                     ('')
                             ))
                         }
