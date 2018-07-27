@@ -131,7 +131,8 @@ const classReducer = (state = initialState, action) => {
 
                     if (data.id === action.payload.nowClass_ID) {
                         return {
-                            ...data, studentMaxNum: action.payload.studentMaxNum,
+                            ...data,
+                            studentMaxNum: action.payload.studentMaxNum,
                             students: { ...data.students, ...action.payload.students },
                             studentsId: [...action.payload.studentsId]
                         }
@@ -146,6 +147,7 @@ const classReducer = (state = initialState, action) => {
                     state.data.map(data => {
                         // 跑每一個班，只要是指定要修改的學生，那麼修改了他的暱稱，所有有他在的地方的暱稱都要改掉
                         if (data.studentsInfo[action.payload.studentUpdateInfoId]) {
+                            // 直接更改暱稱
                             data.studentsInfo[action.payload.studentUpdateInfoId].nickname = action.payload.updateNickname
                             return { ...data, studentsInfo: { ...data.studentsInfo } }
                         } else return data
@@ -169,7 +171,6 @@ const classReducer = (state = initialState, action) => {
                                     return {
                                         ...group, students: group.students
                                     }
-
                                 } else return group
                             }),
                             students:
@@ -199,7 +200,8 @@ const classReducer = (state = initialState, action) => {
                     state.data.map(data => {
                         if (data.id === action.payload.classId) {
                             return {
-                                ...data, groups: data.groups.filter(({ id }) => {
+                                ...data,
+                                groups: data.groups.filter(({ id }) => {
                                     return (id !== action.payload.id)
                                 }
                                 ), students: { ...data.students, ...action.payload.groupStudents }
@@ -227,8 +229,6 @@ const classReducer = (state = initialState, action) => {
                                 }
                                 ), students:
                                     delete data.students[del] ? (data.students) : ('')
-
-
                             }
                         } else return data
 
@@ -242,7 +242,8 @@ const classReducer = (state = initialState, action) => {
                         const del = action.payload.id
                         if (data.id === action.payload.classId) {
                             return {
-                                ...data, students: { ...data.students, ...action.payload.moveStudentAwayGroupInfo },
+                                ...data,
+                                students: { ...data.students, ...action.payload.moveStudentAwayGroupInfo },
                                 groups: data.groups.map((group) => {
                                     if (group.id === action.payload.groupId) {
                                         return {
@@ -255,8 +256,6 @@ const classReducer = (state = initialState, action) => {
                         } else return data
                     })
             }
-
-
         default:
             return state;
     }
