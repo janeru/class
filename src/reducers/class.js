@@ -159,10 +159,12 @@ const classReducer = (state = initialState, action) => {
                 ...state, data:
                     state.data.map(data => {
                         const del = action.payload.studentUpdateInfoId
+                        console.log(del)
                         return {
                             ...data, studentsId: data.studentsId.filter(id => {
                                 return del !== id
                             }),
+                            studentsNum: data.studentsInfo[del] ? data.studentsNum - 1 : data.studentsNum,
                             studentsInfo:
                                 delete data.studentsInfo[del] ? data.studentsInfo : ('')
                             , groups: data.groups.map(group => {
@@ -175,7 +177,7 @@ const classReducer = (state = initialState, action) => {
                             }),
                             students:
                                 delete data.students[del] ? data.students : (''),
-                            studentsNum: data.studentsNum - 1
+
                         }
 
                     })
