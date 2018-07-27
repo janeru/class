@@ -6,46 +6,38 @@ const initialState = {
             name: "向日葵班",
             studentMaxNum: 25,
             studentsNum: 3,
-            studentsInfo: [
-                {
+            studentsId: [1, 2, 3],
+            studentsInfo: {
+                1: {
                     id: 1,
                     nickname: "可愛雞",
                     account: "jane@bonio.com.tw"
                 },
-                {
+                2: {
                     id: 2,
                     nickname: "母雞",
                     account: "jean@bonio.com.tw"
                 },
-                {
+                3: {
                     id: 3,
                     nickname: "小雞",
                     account: "lucas@bonio.com.tw"
                 }
-            ],
+            }
+            ,
             groups: [
                 {
                     id: 1,
                     name: "企鵝組",
-                    total: 3,
-                    students: [
-                        {
-                            id: 1,
-                            name: "Jane"
-                        },
-                        {
-                            id: 2,
-                            name: "Jean"
-                        },
-                    ]
+                    students: {
+                        1: { id: 1, name: "Jane" },
+                        2: { id: 2, name: "Jean" }
+                    }
                 }
             ],
-            students: [
-                {
-                    id: 3,
-                    name: "Lucas"
-                },
-            ],
+            students: {
+                3: { id: 3, name: "Lucas" }
+            },
             count: 0
         },
         {
@@ -53,25 +45,21 @@ const initialState = {
             name: "鬱金香班",
             studentMaxNum: 20,
             studentsNum: 1,
-            studentsInfo: [
-                {
+            studentsId: [1],
+            studentsInfo: {
+                1: {
                     id: 1,
                     nickname: "可愛雞",
                     account: "jane@bonio.com.tw"
                 }
-
-            ],
+            }
+            ,
             groups: [
                 {
                     id: 2,
                     name: "旅蛙組",
                     total: 5,
-                    students: [
-                        {
-                            id: 1,
-                            name: "Jane"
-                        },
-                    ]
+                    students: { 1: { id: 1, name: "Jane" } }
                 }
             ],
             students: [],
@@ -82,58 +70,37 @@ const initialState = {
             name: "幼幼班",
             studentMaxNum: 15,
             studentsNum: 2,
-            studentsInfo: [
-                {
+            studentsId: [4, 5],
+            studentsInfo: {
+                4: {
                     id: 4,
                     nickname: "火雞",
                     account: "casey@bonio.com.tw"
                 },
-                {
+                5: {
                     id: 5,
                     nickname: "老鷹",
                     account: "neil@bonio.com.tw"
                 }
-
-            ],
+            }
+            ,
             groups: [],
-            students: [
+            students:
                 {
-                    id: 4,
-                    name: "Casey"
+                    4: { id: 4, name: "Casey" },
+                    5: { id: 5, name: "Neil" }
                 },
-                {
-                    id: 5,
-                    name: "Neil"
-                }
-            ],
             count: 0
         }
     ]
-
 }
-
-
-
-
 
 const classReducer = (state = initialState, action) => {
     switch (action.type) {
-        case "STUDENTS_INFO":
-            return {
-                ...state, data:
-                    state.data.map(data => {
-                        //先看看要加入哪個班級
 
-                        if (data.id === action.payload.classId) {
-                            return {
-                                ...data, count: data.count + 1,
-                                students: [...data.students, ...action.payload.studentsNew]
-                            }
-                        } else return data
-                    })
-            }
         // 班級列表的新增與刪除
         case "ADD_CLASS":
+            console.log([...state.data, action.payload])
             return { ...state, data: [...state.data, action.payload] };
 
         case "DELETE_CLASS":
@@ -141,16 +108,33 @@ const classReducer = (state = initialState, action) => {
             return {
                 // id是第幾筆資料的id
                 ...state, data: state.data.filter(({ id }) => {
+                    console.log(id !== action.id)
                     return id !== action.id
                 })
+            }
+        case "STUDENTS_INFO":
+            return {
+                ...state, data:
+                    state.data.map(data => {
+                        //先看看要加入哪個班級
+                        if (data.id === action.payload.classId) {
+                            return {
+                                ...data, count: action.payload.count + 1,
+                                students: { ...data.students, ...action.payload.studentsNew },
+                                studentsId: [...action.payload.studentsId]
+                            }
+                        } else return data
+                    })
             }
         case "ADD_STUDENT":
             return {
                 ...state, data: state.data.map(data => {
+
                     if (data.id === action.payload.nowClass_ID) {
                         return {
                             ...data, studentMaxNum: action.payload.studentMaxNum,
-                            students: [...data.students, ...action.payload.students]
+                            students: { ...data.students, ...action.payload.students },
+                            studentsId: [...action.payload.studentsId]
                         }
                     } else return data
                 })
@@ -161,58 +145,49 @@ const classReducer = (state = initialState, action) => {
             return {
                 ...state, data:
                     state.data.map(data => {
-                        if (data.id === action.payload.nowStudentClass_ID) {
-                            return {
-
-                                ...data, studentsInfo: data.studentsInfo.map((stu) => {
-                                    if (stu.id === action.payload.studentUpdateInfoId) {
-                                        return { ...stu, nickname: action.payload.updateNickname }
-                                    } else return stu
-                                }
-                                )
-                            }
-
+                        // 跑每一個班，只要是指定要修改的學生，那麼修改了他的暱稱，所有有他在的地方的暱稱都要改掉
+                        if (data.studentsInfo[action.payload.studentUpdateInfoId]) {
+                            data.studentsInfo[action.payload.studentUpdateInfoId].nickname = action.payload.updateNickname
+                            return { ...data, studentsInfo: { ...data.studentsInfo } }
                         } else return data
                     })
             }
         case "DELETE_STUDENT":
+
             return {
                 ...state, data:
                     state.data.map(data => {
-                        if (data.id === action.payload.nowStudentClass_ID) {
+                        const del = action.payload.studentUpdateInfoId
+                        return {
+                            ...data, studentsId: data.studentsId.filter(id => {
+                                return del !== id
+                            }),
+                            studentsInfo:
+                                delete data.studentsInfo[del] ? data.studentsInfo : ('')
+                            , groups: data.groups.map(group => {
+                                if (group.id === action.payload.deleteStudentGroupId) {
+                                    delete group.students[del]
+                                    return {
+                                        ...group, students: group.students
+                                    }
 
-                            return {
-                                ...data, studentsInfo: data.studentsInfo.filter(({ id }) => {
-                                    return (id !== action.payload.studentUpdateInfoId)
-                                }
-                                ), groups: data.groups.map((group) => {
-                                    if (group.id === action.payload.deleteStudentGroupId) {
-                                        return {
-                                            ...group,
-                                            students: group.students.filter(({ id }) => {
+                                } else return group
+                            }),
+                            students:
+                                delete data.students[del] ? data.students : (''),
+                            studentsNum: data.studentsNum - 1
+                        }
 
-                                                return id !== action.payload.studentUpdateInfoId
-                                            })
-                                        }
-
-                                    } return group
-                                }), students: data.students.filter(({ id }) => {
-                                    return id !== action.payload.studentUpdateInfoId
-                                })
-
-
-                            }
-                        } else return data
                     })
+
             }
+
 
         case "ADD_GROUP":
             return {
                 ...state, data:
                     state.data.map(data => {
-
-                        if (data.id === action.payload.classid) {
-
+                        if (data.id === action.payload.classId) {
                             return {
                                 ...data, groups: [...data.groups, action.payload]
                             }
@@ -228,7 +203,7 @@ const classReducer = (state = initialState, action) => {
                                 ...data, groups: data.groups.filter(({ id }) => {
                                     return (id !== action.payload.id)
                                 }
-                                ), students: [...data.students, ...action.payload.groupStudents]
+                                ), students: { ...data.students, ...action.payload.groupStudents }
                             }
                         } else return data
                     })
@@ -239,19 +214,21 @@ const classReducer = (state = initialState, action) => {
         case "ADD_STUDENTS_GROUP":
             return {
                 ...state, data:
-                    state.data.map(data => {
-                        if (data.id === action.payload.classId) {
 
+                    state.data.map(data => {
+                        const del = action.payload.id
+                        if (data.id === action.payload.classId) {
                             return {
                                 ...data, groups: data.groups.map((group) => {
-                                    if (group.id === action.payload.groupid) {
-
-                                        return { ...group, students: [...group.students, action.payload.addStudentToGroupInfo] }
+                                    if (group.id === action.payload.groupId) {
+                                        return {
+                                            ...group, students: { ...group.students, ...action.payload.addStudentToGroupInfo }
+                                        }
                                     } else return group
-                                }), students: data.students.filter(({ id }) => {
-                                    return id !== action.payload.id
                                 }
-                                )
+                                ), students:
+                                    delete data.students[del] ? (data.students) : ('')
+
 
                             }
                         } else return data
@@ -263,18 +240,15 @@ const classReducer = (state = initialState, action) => {
             return {
                 ...state, data:
                     state.data.map(data => {
+                        const del = action.payload.id
                         if (data.id === action.payload.classId) {
                             return {
-                                ...data, students: [...data.students, action.payload.moveStudentAwayGroupInfo],
+                                ...data, students: { ...data.students, ...action.payload.moveStudentAwayGroupInfo },
                                 groups: data.groups.map((group) => {
                                     if (group.id === action.payload.groupId) {
                                         return {
-                                            ...group, students: group.students.filter(({ id }) => {
-
-                                                return id !== action.payload.id
-                                            }
-                                            )
-
+                                            ...group, students:
+                                                delete group.students[del] ? (group.students) : ('')
                                         }
                                     } else return group
                                 })

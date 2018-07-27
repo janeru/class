@@ -3,14 +3,13 @@ import uuid from 'uuid';
 
 export const addClass = ({
     id, name = '', studentMaxNum = 0, studentsNum = 0,
-    studentsInfo = [], groups = [], students = [], count = 0 } = {}) =>
+    groups = [], students = [], count = 0 } = {}) =>
     ({
         type: "ADD_CLASS",
         payload: {
             id: uuid(),
             name,
             studentMaxNum,
-            studentsInfo,
             groups,
             students,
             studentsNum,
@@ -24,26 +23,40 @@ export const deleteClass = ({ id } = {}) => ({
     //component所傳入的要刪除的id
     id
 });
-
-// 新增學生人數
-export const addStudents = ({ nowClass_ID, studentMaxNumber, addStudentsArray } = {}) =>
+// 將空座位及未分組的學生放入students資訊裡面
+export const studentsInfor = ({ classId, studentsNewInfo, studentsId, count = 0 } = {}) =>
     ({
+        type: "STUDENTS_INFO",
+        payload: {
+            studentsNew: studentsNewInfo,
+            classId,
+            studentsId,
+            count
+        }
+    }
+    )
+// 新增學生人數
+export const addStudents = ({ nowClass_ID, studentMaxNumber, obj, studentsId } = {}) =>
+    ({
+
         type: "ADD_STUDENT",
         payload: {
             nowClass_ID,
             studentMaxNum: studentMaxNumber,
             //每個學生自己的id
-            students: addStudentsArray
+            students: obj,
+            studentsId
         }
     });
 // 修改學生暱稱
-export const editStudents = ({ nowStudentClass_ID, studentUpdateInfoId, updateNickname } = {}) =>
+export const editStudents = ({ nowStudentClass_ID, studentUpdateInfoId, updateNickname, editStudentGroupId } = {}) =>
     ({
         type: "EDIT_STUDENT",
         payload: {
             nowStudentClass_ID,
             studentUpdateInfoId,
-            updateNickname
+            updateNickname,
+            editStudentGroupId,
         }
     }
     )
@@ -60,17 +73,19 @@ export const deleteStudents = ({ nowStudentClass_ID, studentUpdateInfoId, delete
     )
 
 // 新增小組名稱 (需要比對班級後，再將新增的名字加入)
-export const addGroups = ({ groupName, classid, total = 0, students = [] } = {}) =>
-    ({
-        type: "ADD_GROUP",
-        payload: {
-            name: groupName,
-            students,
-            classid,
-            id: uuid(),
+export const addGroups = ({ groupName, classId, students, id } = {}) =>
 
+    (
+        {
+
+            type: "ADD_GROUP",
+            payload: {
+                name: groupName,
+                classId: classId,
+                students: {},
+                id: uuid(),
+            }
         }
-    }
     )
 // 刪除小組 (需要比對要刪除的班級id及班級內要刪除的小組的id，以及要將留在小組的學生們的id及name移出去)
 export const deleteGroups = ({ classId, id, groupStudents } = {}) =>
@@ -85,26 +100,15 @@ export const deleteGroups = ({ classId, id, groupStudents } = {}) =>
     }
     )
 
-// 將空座位及未分組的學生放入students資訊裡面
-export const studentsInfor = ({ studentsNew, classId } = {}) =>
-    ({
-        type: "STUDENTS_INFO",
-        payload: {
-            studentsNew: studentsNew,
-            classId
 
-        }
-
-    }
-    )
 // 移動學生加入小組
-export const addStudentstoGroup = ({ classId, groupid, addStudentToGroupInfo, id } = {}) =>
+export const addStudentstoGroup = ({ classId, groupId, addStudentToGroupInfo, id } = {}) =>
     ({
         type: "ADD_STUDENTS_GROUP",
         payload: {
-            groupid,
-            addStudentToGroupInfo,
             classId,
+            groupId,
+            addStudentToGroupInfo,
             id
 
         }
@@ -117,7 +121,7 @@ export const moveStudentsawayGroup = ({ moveStudentAwayGroupInfo, classId, group
     ({
         type: "MOVE_STUDENTS_AWAY_GROUP",
         payload: {
-            moveStudentAwayGroupInfo,
+            moveStudentAwayGroupInfo: moveStudentAwayGroupInfo,
             classId,
             groupId,
             id
