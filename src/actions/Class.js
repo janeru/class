@@ -3,17 +3,19 @@ import uuid from 'uuid';
 
 export const addClass = ({
     id, name = '', studentMaxNum = 0, studentsNum = 0,
-    groups = [], students = [], count = 0 } = {}) =>
+    groups = [], students = [], count = 0, studentsInfo = [] } = {}, studentsId = []) =>
     ({
         type: "ADD_CLASS",
         payload: {
             id: uuid(),
+            studentsId,
             name,
             studentMaxNum,
             groups,
             students,
             studentsNum,
-            count
+            count,
+            studentsInfo
         }
     });
 
@@ -24,14 +26,15 @@ export const deleteClass = ({ id } = {}) => ({
     id
 });
 // 將空座位及未分組的學生放入students資訊裡面
-export const studentsInfor = ({ classId, studentsNewInfo, studentsId, count = 0 } = {}) =>
+export const studentsInfor = ({ classId, studentsNewInfo, studentsId, count = 0, studentsInfo = [] } = {}) =>
     ({
         type: "STUDENTS_INFO",
         payload: {
-            studentsNew: studentsNewInfo,
             classId,
+            studentsNew: studentsNewInfo,
             studentsId,
-            count
+            count,
+            studentsInfo
         }
     }
     )
@@ -59,14 +62,15 @@ export const editStudents = ({ nowStudentClass_ID, studentUpdateInfoId, updateNi
         }
     }
     )
-// 刪除學生暱稱
+// 刪除學生
 export const deleteStudents = ({ nowStudentClass_ID, studentUpdateInfoId, deleteStudentGroupId } = {}) =>
     ({
         type: "DELETE_STUDENT",
         payload: {
             nowStudentClass_ID,
             studentUpdateInfoId,
-            deleteStudentGroupId
+            deleteStudentGroupId,
+
         }
     }
     )
