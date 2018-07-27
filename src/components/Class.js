@@ -23,6 +23,7 @@ class ClassPage extends Component {
       studentMaxNum: 0,
       classAdminPage: false,
       classId: NaN,
+      deleteClassId: NaN,
       //是否要刪除班級的modal
       modalDeleteClass: false,
       randomPhotoNum: [1079, 1080, 1081]
@@ -36,8 +37,9 @@ class ClassPage extends Component {
     this.setState(({ addClassModal }) => ({ addClassModal: !addClassModal }));
   }
   //控制刪除班級的modal的彈跳
-  toggleDeleteClass = () => {
-    this.setState(({ modalDeleteClass }) => ({ modalDeleteClass: !modalDeleteClass }));
+  toggleDeleteClass = (id) => () => {
+    console.log(id)
+    this.setState(({ modalDeleteClass }) => ({ deleteClassId: id, modalDeleteClass: !modalDeleteClass }));
   }
 
   //控制班級頁面是否出現，哪個班級的資料跟index也傳進來
@@ -63,9 +65,10 @@ class ClassPage extends Component {
     }))
   }
   //確認是否刪除班級
-  handleDeleteClass = (id) => () => {
-
-    this.props.deleteClass({ id: id })
+  handleDeleteClass = () => {
+    const { deleteClassId } = this.state
+    console.log(deleteClassId)
+    this.props.deleteClass({ id: deleteClassId })
     this.setState(({ modalDeleteClass }) => ({ modalDeleteClass: !modalDeleteClass }))
   }
 
@@ -76,7 +79,7 @@ class ClassPage extends Component {
     return (
       <div>
 
-        {classAdminPage === true ? (<ClassAdmin class_Id={classId} classAdmin_Page={classAdminPage} />) :
+        {(classAdminPage === true) ? (<ClassAdmin class_Id={classId} />) :
           (
             <div>
               <Row style={{ backgroundColor: '#2196f329', height: '13vh' }}>
@@ -91,11 +94,12 @@ class ClassPage extends Component {
                   (studentMaxNum > 0) ?
                     <Col xs="12" sm="4">
                       <Card className="content" >
+                        {console.log(id)}
                         <CardImg width="100%" height="250vh" src={"https://picsum.photos/800/900?image=" + randomPhotoNum[index]} alt="Card image cap"
                           onClick={this.class_AdminPage(id)}
                         />
                         <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }}
-                          onClick={this.toggleDeleteClass} />
+                          onClick={this.toggleDeleteClass(id)} />
                         <CardBlock>
                           <CardTitle>
                             {name}
@@ -126,13 +130,13 @@ class ClassPage extends Component {
                           </ModalFooter>
                         </Modal>
                         {/* 刪除班級所詢問的modal */}
-                        <Modal isOpen={modalDeleteClass} toggle={this.toggleDeleteClass}>
-                          <ModalHeader toggle={this.toggleDeleteClass}>刪除班級</ModalHeader>
+                        <Modal isOpen={modalDeleteClass} toggle={this.toggleDeleteClass(id)}>
+                          <ModalHeader toggle={this.toggleDeleteClass(id)}>刪除班級</ModalHeader>
                           <ModalBody>
                             您確定要刪除班級嗎？這將會遺失所有學生資料。
                 </ModalBody>
                           <ModalFooter>
-                            <Button color="danger" onClick={this.handleDeleteClass(id)}>
+                            <Button color="danger" onClick={this.handleDeleteClass}>
                               確認刪除
                 </Button>
                           </ModalFooter>
