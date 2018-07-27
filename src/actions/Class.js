@@ -49,14 +49,13 @@ export const addStudents = ({ nowClass_ID, studentMaxNumber, obj, studentsId } =
         }
     });
 // 修改學生暱稱
-export const editStudents = ({ nowStudentClass_ID, studentUpdateInfoId, updateNickname, editStudentGroupId } = {}) =>
+export const editStudents = ({ nowStudentClass_ID, studentUpdateInfoId, updateNickname } = {}) =>
     ({
         type: "EDIT_STUDENT",
         payload: {
             nowStudentClass_ID,
             studentUpdateInfoId,
             updateNickname,
-            editStudentGroupId,
         }
     }
     )
