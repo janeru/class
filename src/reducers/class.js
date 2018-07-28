@@ -99,7 +99,7 @@ const classReducer = (state = initialState, action) => {
 
         // 班級列表的新增與刪除
         case "ADD_CLASS":
-            console.log([...state.data, action.payload])
+
             return { ...state, data: [...state.data, action.payload] };
 
         case "DELETE_CLASS":
@@ -159,7 +159,7 @@ const classReducer = (state = initialState, action) => {
                 ...state, data:
                     state.data.map(data => {
                         const del = action.payload.studentUpdateInfoId
-                        console.log(del)
+
                         return {
                             ...data, studentsId: data.studentsId.filter(id => {
                                 return del !== id

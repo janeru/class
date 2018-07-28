@@ -7,7 +7,6 @@ import { addClass, deleteClass } from '../actions/Class'
 import { Row, Col, Button, Card, CardImg, CardBlock, CardTitle, CardText, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 const mapStateToProps = (state) => {
-  console.log(state.classDatas.data)
   return {
     classDatas: state.classDatas.data,
   }
@@ -39,7 +38,6 @@ class ClassPage extends Component {
   }
   //控制刪除班級的modal的彈跳
   toggleDeleteClass = (id) => () => {
-    console.log(id)
     this.setState(({ modalDeleteClass }) => ({ deleteClassId: id, modalDeleteClass: !modalDeleteClass }));
   }
 
@@ -60,7 +58,6 @@ class ClassPage extends Component {
     event.preventDefault();
     const { name, studentMaxNum } = this.state;
     const num = Number(studentMaxNum)
-    console.log(typeof (num))
     this.setState(({ studentMaxNum }) => ({ studentMaxNum: num }))
 
     this.props.addClass({ name, studentMaxNum })
@@ -86,18 +83,16 @@ class ClassPage extends Component {
         {(classAdminPage === true) ? (<ClassAdmin class_Id={classId} />) :
           (
             <div>
-              <Row style={{ backgroundColor: '#2196f329', height: '60px' }}>
+              <Row style={{ backgroundImage: 'url(' + 'https://picsum.photos/3000/2000?image=941' + ')', height: '60px' }}>
                 <Col style={{ textAlign: "center", paddingTop: "40px", fontSize: "1.5rem" }}>
                   班級列表
                   </Col>
               </Row>
-              <Row style={{ backgroundColor: '#2196f329', height: '65px' }}>
+              <Row style={{ backgroundImage: 'url(' + 'https://picsum.photos/3000/2000?image=941' + ')', height: '65px' }}>
                 <Button outline color="secondary" className="buttonClass" onClick={this.toggleAddClass}>新增班級</Button>
               </Row>
 
-              <Row className="justify-content-between" style={{
-                backgroundColor: '#f0f32126'
-              }}>
+              <Row className="justify-content-between">
 
                 {
                   classDatas.map(({ id, name, studentsNum, studentMaxNum }, index) => (
@@ -107,7 +102,7 @@ class ClassPage extends Component {
                     (studentMaxNum > 0) ?
                       <Col xs="12" sm="4">
                         <Card className="content">
-                          <CardImg width="100%" height="150px" src={"https://picsum.photos/800/900?image=" + randomPhotoNum[index]} alt="Card image cap"
+                          <CardImg width="100%" height="150px" src={"https://picsum.photos/200/300?image=" + randomPhotoNum[index]} alt="Card image cap"
                             onClick={this.class_AdminPage(id)}
                           />
                           <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }}

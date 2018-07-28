@@ -31,7 +31,7 @@ class GroupSheet extends Component {
         this.setState(({ dropdownOpen }) => ({ dropdownOpen: !dropdownOpen }));
     }
     changeValue = (name, id, number) => () => {
-        console.log('', name, '', id, '', number)
+
         this.setState(({ dropDownValue, buttonToChoose, nowClickGroupId }) => ({ dropDownValue: name, nowClickGroupId: id, buttonToChoose: number }))
     }
     render() {
@@ -45,7 +45,6 @@ class GroupSheet extends Component {
                 {/* 如果班級的group長度不為0 => 就顯示組別以及其組員
                 但是如果班級的長度為0 => 就顯示學生 */}
                 <Col className="dropdownRow">
-                    {console.log(nowClass)}
                     <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggleSheet}>
                         <DropdownToggle caret color="warning" className="dropdownMenu" >
                             {this.state.dropDownValue}
@@ -111,7 +110,7 @@ class GroupSheet extends Component {
                                     <div >
                                         {
                                             <div>
-                                                {console.log(nowClass.studentsId)}
+
                                                 {nowClass.studentsId.map((id, index) => {
                                                     return (nowClass.students[id] && nowClass.students[id].name !== '尚未加入') ? <DropdownItem disabled>{nowClass.students[id].name}</DropdownItem> : ('')
                                                 })}

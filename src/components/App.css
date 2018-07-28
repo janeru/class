@@ -13,7 +13,7 @@
 .buttonClass{
   
   height:35px;
-  margin:20px;
+  margin:10px;
   float: right;
   background-color:pink;
   color:rgb(59, 51, 48);
@@ -33,11 +33,11 @@
   float:center;
   margin:40px;
   background-color:pink;
-  color:rgb(59, 51, 48);
+  color:rgb(122, 106, 100);
   width:100px;
 }
 .dropdownCol{
-  background-color: #f0f8ff
+  background-color: #e5edf5e0
 }
 .buttonGroup{
   margin: 50px;
@@ -71,7 +71,8 @@
   justify-content: center;
 }
 .dropDownColor{
-  background-color: #5eccf826;
+  background: url('https://picsum.photos/2000/1000?image=941');
+  /* background-color: #2196f39e; */
   padding:20px;
 }
 .deleteGroup{

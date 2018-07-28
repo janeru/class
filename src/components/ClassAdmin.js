@@ -245,8 +245,7 @@ class ClassStudents extends Component {
                 {(backToClassList) ? (<ClassPage />) : (
                     <div>
                         {/* 選取哪一筆資料 */}
-
-                        <Row style={{ backgroundColor: '#ffeb3b29', float: 'center', display: 'flex' }}>
+                        <Row style={{ backgroundImage: 'url(' + 'https://picsum.photos/3000/1000?image=947' + ')', float: 'center', display: 'flex' }}>
                             <Col xs="12">
                                 <Button color="info" className="buttonStudent" onClick={this.toggleAddStudents} >新增學生</Button>
                                 <Button color="secondary" className="backToClassList" onClick={this.isBackToClassList}>返回班級列表</Button>
@@ -262,7 +261,7 @@ class ClassStudents extends Component {
                                         classData.studentId === [] ? ('Please wait') :
                                             (<div>
 
-                                                <Row className="photo" style={{ backgroundColor: '#9e9e9e1f' }}>
+                                                <Row className="photo">
 
                                                     <div className="dropDownColor">
                                                         <GroupDropdown nowClass={classData} />
