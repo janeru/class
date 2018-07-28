@@ -102,7 +102,7 @@ class ClassPage extends Component {
                     (studentMaxNum > 0) ?
                       <Col xs="12" sm="4">
                         <Card className="content">
-                          <CardImg width="100%" height="150px" src={"https://picsum.photos/200/300?image=" + randomPhotoNum[index]} alt="Card image cap"
+                          <CardImg width="100%" height="200px" src={"https://picsum.photos/200/300?image=" + randomPhotoNum[index]} alt="Card image cap"
                             onClick={this.class_AdminPage(id)}
                           />
                           <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }}
