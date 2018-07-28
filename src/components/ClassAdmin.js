@@ -444,6 +444,9 @@ class ClassStudents extends Component {
                     </div>
                 )
                 }
+                <Row className="bottom" >
+                    @2018 <br />
+                </Row>
 
             </div>
         );
