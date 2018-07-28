@@ -76,7 +76,7 @@ export const deleteStudents = ({ nowStudentClass_ID, studentUpdateInfoId, delete
     )
 
 // 新增小組名稱 (需要比對班級後，再將新增的名字加入)
-export const addGroups = ({ groupName, classId, students, id } = {}) =>
+export const addGroups = ({ groupName, classId, students = {}, id } = {}) =>
 
     (
         {
@@ -84,8 +84,8 @@ export const addGroups = ({ groupName, classId, students, id } = {}) =>
             type: "ADD_GROUP",
             payload: {
                 name: groupName,
-                classId: classId,
-                students: {},
+                classId,
+                students,
                 id: uuid(),
             }
         }
