@@ -58,10 +58,16 @@
 .classBox{
  
   justify-content: center;
-  margin:30px;
+  margin-left:120px;
   padding:10px;
   
 }
+@media screen and (max-width:800px){
+  .classBox{
+    margin-left:50px;
+  
+  }
+  }
 .card-body{
   background-color: #ffc0cb59
 }

@@ -268,7 +268,7 @@ class ClassStudents extends Component {
                                                     </div>
                                                     <Button color="primary" className="buttonGroup" onClick={this.toggleNewGroup}>新增小組</Button>
 
-                                                    <Col xs="9" sm="4" className="classBox">
+                                                    <Col xs="12" sm="4" className="classBox">
                                                         <div className="chooseClassName">
                                                             {classData.name}
                                                             <i class="fas fa-user" style={{ color: '#347fc1ba', margin: '5px' }}></i>
