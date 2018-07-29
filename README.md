@@ -21,7 +21,7 @@ Visit http://localhost:8000
 
 ## Introduction
 ```
-Put data in initial state, and use reactstrap to do this wwebsite.
+Put data in initial state, and use reactstrap to do this website.
 ```
 ## Function 
 ```
