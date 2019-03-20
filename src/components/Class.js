@@ -80,94 +80,97 @@ class ClassPage extends Component {
     return (
       <div>
 
-        {(classAdminPage === true) ? (<ClassAdmin class_Id={classId} />) :
-          (
-            <div>
-              <Row style={{ backgroundImage: 'url(' + 'https://picsum.photos/3000/2000?image=941' + ')', height: '60px' }}>
-                <Col style={{ textAlign: "center", paddingTop: "40px", fontSize: "1.5rem" }}>
-                  班級列表
+        {(classAdminPage === true) ? <ClassAdmin class_Id={classId} /> :
+
+          <div>
+            <Row style={{ backgroundImage: 'url(' + 'https://picsum.photos/3000/2000?image=941' + ')', height: '60px' }}>
+              <Col style={{ textAlign: "center", paddingTop: "40px", fontSize: "1.5rem" }}>
+                班級列表
                   </Col>
-              </Row>
-              <Row style={{ backgroundImage: 'url(' + 'https://picsum.photos/3000/2000?image=941' + ')', height: '65px' }}>
-                <Button outline color="secondary" className="buttonClass" onClick={this.toggleAddClass}>新增班級</Button>
-              </Row>
+            </Row>
+            <Row style={{ backgroundImage: 'url(' + 'https://picsum.photos/3000/2000?image=941' + ')', height: '65px' }}>
+              <Button outline color="secondary" className="buttonClass" onClick={this.toggleAddClass}>新增班級</Button>
+            </Row>
 
-              <Row className="justify-content-between">
+            <Row className="justify-content-between">
 
-                {
-                  classDatas.map(({ id, name, studentsNum, studentMaxNum }, index) => (
+              {
+                classDatas.map(({ id, name, studentsNum, studentMaxNum }, index) => (
 
-                    //  <Col xs="4"> => 12/4=3 就是每排可以放3張照片，每3張放在一欄就換一行
-                    //  xs 用在1000以下的小螢幕
-                    (studentMaxNum > 0) ?
-                      <Col xs="12" sm="4">
-                        <Card className="content">
-                          <CardImg width="100%" height="200px" src={"https://picsum.photos/200/300?image=" + randomPhotoNum[index]} alt="Card image cap"
-                            onClick={this.class_AdminPage(id)}
-                          />
-                          <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }}
-                            onClick={this.toggleDeleteClass(id)} />
-                          <CardBlock>
-                            <CardTitle>
-                              {name}
-                            </CardTitle>
-                            <CardText>
-                              {studentsNum + "/" + studentMaxNum}
-                            </CardText>
-                          </CardBlock>
+                  //  <Col xs="4"> => 12/4=3 就是每排可以放3張照片，每3張放在一欄就換一行
+                  //  xs 用在1000以下的小螢幕
+                  (studentMaxNum > 0) ?
+                    <Col xs="12" sm="4">
+                      <Card className="content">
+                        <CardImg width="100%" height="200px" src={"https://picsum.photos/200/300?image=" + randomPhotoNum[index]} alt="Card image cap"
+                          onClick={this.class_AdminPage(id)}
+                        />
+                        <i class="fas fa-trash" style={{ backgroundColor: '#ffc0cb59' }}
+                          onClick={this.toggleDeleteClass(id)} />
+                        <CardBlock>
+                          <CardTitle>
+                            {name}
+                          </CardTitle>
+                          <CardText>
+                            {studentsNum + "/" + studentMaxNum}
+                          </CardText>
+                        </CardBlock>
 
-                          {/* 新增後所彈跳出來的Modal */}
-                          <Modal isOpen={addClassModal} toggle={this.toggleAddClass}>
-                            <ModalHeader toggle={this.toggleAddClass}>新增班級</ModalHeader>
-                            <ModalBody>
-                              <Form>
-                                <FormGroup>
-                                  <Label for="name">班級名稱</Label>
-                                  <Input type="text" name="className" id="name" placeholder=""
-                                    onChange={this.handleChange} />
-                                  <Label for="studentMaxNum">人數</Label>
-                                  <Input type="number" name="classPeopleNum" id="studentMaxNum" placeholder=""
-                                    onChange={this.handleChange} />
-                                </FormGroup>
-                              </Form>
-                            </ModalBody>
-                            <ModalFooter>
-                              <Button onClick={this.handleSubmit}>
-                                儲存
+                        {/* 新增後所彈跳出來的Modal */}
+                        <Modal isOpen={addClassModal} toggle={this.toggleAddClass}>
+                          <ModalHeader toggle={this.toggleAddClass}>新增班級</ModalHeader>
+                          <ModalBody>
+                            <Form>
+                              <FormGroup>
+                                <Label for="name">班級名稱</Label>
+                                <Input type="text" name="className" id="name" placeholder=""
+                                  onChange={this.handleChange} />
+                                <Label for="studentMaxNum">人數</Label>
+                                <Input type="number" name="classPeopleNum" id="studentMaxNum" placeholder=""
+                                  onChange={this.handleChange} />
+                              </FormGroup>
+                            </Form>
+                          </ModalBody>
+                          <ModalFooter>
+                            <Button onClick={this.handleSubmit}>
+                              儲存
                 </Button>
-                            </ModalFooter>
-                          </Modal>
-                          {/* 刪除班級所詢問的modal */}
-                          <Modal isOpen={modalDeleteClass} toggle={this.toggleDeleteClass(id)}>
-                            <ModalHeader toggle={this.toggleDeleteClass(id)}>刪除班級</ModalHeader>
-                            <ModalBody>
-                              您確定要刪除班級嗎？這將會遺失所有學生資料。
+                          </ModalFooter>
+                        </Modal>
+                        {/* 刪除班級所詢問的modal */}
+                        <Modal isOpen={modalDeleteClass} toggle={this.toggleDeleteClass(id)}>
+                          <ModalHeader toggle={this.toggleDeleteClass(id)}>刪除班級</ModalHeader>
+                          <ModalBody>
+                            您確定要刪除班級嗎？這將會遺失所有學生資料。
                 </ModalBody>
-                            <ModalFooter>
-                              <Button color="danger" onClick={this.handleDeleteClass}>
-                                確認刪除
+                          <ModalFooter>
+                            <Button color="danger" onClick={this.handleDeleteClass}>
+                              確認刪除
                 </Button>
-                            </ModalFooter>
-                          </Modal>
+                          </ModalFooter>
+                        </Modal>
 
-                        </Card>
+                      </Card>
 
-                      </Col>
-                      : ('')
-                  ))
-                }
+                    </Col>
+                    : ('')
+                ))
+              }
 
-                <Row className="bottom" >
-                  @2018 <br />
-                </Row>
-              </Row>
+
+            </Row>
 
 
 
-            </div>
-          )
+          </div>
+
 
         }
+        <div className="bottom" >
+          <div className="year">
+            @2018
+          </div><br />
+        </div>
       </div>
     )
   }

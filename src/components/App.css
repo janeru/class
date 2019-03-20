@@ -80,6 +80,7 @@
   background: url('https://picsum.photos/2000/1000?image=941');
   /* background-color: #2196f39e; */
   padding:20px;
+
 }
 .deleteGroup{
   border-radius:1.5rem;
@@ -96,14 +97,24 @@
   display: flex;
 }
 .bottom {
-  padding:10px;
+
   line-height: -10px;
   background-color: rgba(228, 227, 201, 0.788);
   position:fixed;
-  bottom: 0px;
+  bottom:0px;
   width: 100%;
   justify-content: center;
   font-size: 18px;
   left: 0px;
-  margin:0px
+
   }
+
+  .justify-content-around.row{
+    position: relative;
+    margin-bottom: 100px;
+  }
+
+ .year{   
+   margin-top:20px;
+   text-align:center;
+ }

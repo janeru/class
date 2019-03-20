@@ -238,7 +238,7 @@ class ClassStudents extends Component {
     render() {
         const { modalAddStudents, modalEditStudents, modalStudentsToGroup, modalAddGroup, studentUpdateInfoName,
             studentUpdateInfoNickname, studentUpdateInfoAccount, backToClassList
-             } = this.state
+        } = this.state
 
         return (
             <div>
@@ -266,6 +266,7 @@ class ClassStudents extends Component {
                                                     <div className="dropDownColor">
                                                         <GroupDropdown nowClass={classData} />
                                                     </div>
+
                                                     <Button color="primary" className="buttonGroup" onClick={this.toggleNewGroup}>新增小組</Button>
 
                                                     <Col xs="12" sm="4" className="classBox">
@@ -441,12 +442,14 @@ class ClassStudents extends Component {
                                     ('')
                             ))
                         }
+                        <div className="bottom" >
+                            <div className="year">
+                                @2018 </div>
+                            <br />
+                        </div>
                     </div>
                 )
                 }
-                <Row className="bottom" >
-                    @2018 <br />
-                </Row>
 
             </div>
         );
